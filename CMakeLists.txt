@@ -22,5 +22,6 @@ set(SOURCES
 )
 
 add_executable(image_processing_learning_app ${SOURCES})
+target_compile_definitions(image_processing_learning_app PRIVATE DIAGNOSTICS_ENABLED)
 target_include_directories(image_processing_learning_app PRIVATE ${INCLUDE_DIR})
 target_link_libraries(image_processing_learning_app PRIVATE ${OpenCV_LIBS})
