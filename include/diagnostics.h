@@ -1,0 +1,1 @@
+void* task_diagnostics(void* arg);
