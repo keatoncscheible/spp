@@ -17,7 +17,7 @@ set(SOURCES
     ${SOURCE_DIR}/main.cpp
     ${SOURCE_DIR}/diagnostics.cpp
     ${SOURCE_DIR}/video_capture.cpp
-    ${SOURCE_DIR}/video_proc.cpp
+    ${SOURCE_DIR}/video_process.cpp
     ${SOURCE_DIR}/task.cpp
 )
 

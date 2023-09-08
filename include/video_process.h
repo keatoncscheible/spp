@@ -2,4 +2,4 @@
 /***********************************************
 Function Prototypes
 ***********************************************/
-void* task_video_proc(void* arg);
+void* task_video_process(void* arg);

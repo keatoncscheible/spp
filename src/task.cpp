@@ -4,14 +4,14 @@
 
 #include "diagnostics.h"
 #include "video_capture.h"
-#include "video_proc.h"
+#include "video_process.h"
 
 /***********************************************
 Constants
 ***********************************************/
 Task tasks[static_cast<int>(TaskId::COUNT)] = {
     {TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE, task_video_capture},
-    {TaskId::VIDEO_PROC, TaskPriority::VIDEO_PROC, task_video_proc},
+    {TaskId::VIDEO_PROC, TaskPriority::VIDEO_PROC, task_video_process},
 #ifdef DIAGNOSTICS_ENABLED
     {TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS, task_diagnostics}
 #endif
