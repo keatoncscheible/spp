@@ -8,7 +8,7 @@ enum class TaskPriority { VIDEO_CAPTURE = 1, VIDEO_PROC, DIAGNOSTICS };
 typedef void* (*TaskFunction)(void*);
 
 /***********************************************
-Classses
+Classes
 ***********************************************/
 class Task {
    public:
