@@ -12,7 +12,10 @@ Constants
 static Task tasks[] = {
     {TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE, task_video_capture},
     {TaskId::VIDEO_PROC, TaskPriority::VIDEO_PROC, task_video_proc},
-    {TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS, task_diagnostics}};
+#ifdef DIAGNOSTICS_ENABLED
+    {TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS, task_diagnostics}
+#endif
+};
 
 /***********************************************
 Functions
