@@ -20,7 +20,7 @@ void* task_diagnostics(void* arg) {
     pthread_cond_t cond;
     pthread_cond_init(&cond, nullptr);  // Initialize condition variable
 
-    std::ofstream logFile("diagnostics/diagnostics_log.txt");
+    std::ofstream logFile("diagnostics/diagnostics_out.txt");
 
     while (true) {
         pthread_mutex_lock(&mutex);
