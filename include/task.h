@@ -3,8 +3,21 @@
 /***********************************************
 Types
 ***********************************************/
-enum class TaskId { VIDEO_CAPTURE, VIDEO_PROC, DIAGNOSTICS, COUNT };
-enum class TaskPriority { VIDEO_CAPTURE = 1, VIDEO_PROC, DIAGNOSTICS };
+enum class TaskId {
+    VIDEO_CAPTURE,
+    VIDEO_PROC,
+#ifdef DIAGNOSTICS_ENABLED
+    DIAGNOSTICS,
+#endif
+    COUNT
+};
+enum class TaskPriority {
+    VIDEO_CAPTURE = 1,
+    VIDEO_PROC,
+#ifdef DIAGNOSTICS_ENABLED
+    DIAGNOSTICS,
+#endif
+};
 typedef void* (*TaskFunction)(void*);
 
 /***********************************************
@@ -27,6 +40,12 @@ class Task {
 };
 
 /***********************************************
-Function Prototypes
+Variables
+***********************************************/
+extern Task tasks[static_cast<int>(TaskId::COUNT)];
+
+/***********************************************
+Functions
 ***********************************************/
 void task_init();
+void task_shutdown();

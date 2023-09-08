@@ -3,8 +3,14 @@
 #include <pthread.h>
 #include <time.h>
 
+#include <atomic>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
+
+extern std::atomic<bool> shutting_down;
+
+namespace fs = std::filesystem;
 
 /***********************************************
 Functions
@@ -20,9 +26,19 @@ void* task_diagnostics(void* arg) {
     pthread_cond_t cond;
     pthread_cond_init(&cond, nullptr);  // Initialize condition variable
 
-    std::ofstream log_file("diagnostics/diagnostics_out.txt");
+    // Check if the directory exists
+    if (!fs::exists(DIAGNOSTICS_FOLDER)) {
+        // If it doesn't exist, create it
+        if (!fs::create_directory(DIAGNOSTICS_FOLDER)) {
+            std::cerr << "Failed to create " << DIAGNOSTICS_FOLDER << std::endl;
+        }
+    }
 
-    while (true) {
+    std::ofstream log_file(DIAGNOSTICS_FILE, std::ios::out | std::ios::trunc);
+
+    int iter = 0;
+    while (!shutting_down) {
+        iter++;
         pthread_mutex_lock(&mutex);
 
         // Calculate the absolute time for timedwait
@@ -38,8 +54,9 @@ void* task_diagnostics(void* arg) {
         // Wait for the specified time or until signaled
         pthread_cond_timedwait(&cond, &mutex, &abs_time);
 
-        log_file << "Diagnostics" << std::endl;
-        log_file.flush();  // Flush the buffer to ensure data is written
+        log_file << "Diagnostics: " << iter << std::endl;
+        log_file.flush();
+        log_file.seekp(0);
 
         pthread_mutex_unlock(&mutex);
     }

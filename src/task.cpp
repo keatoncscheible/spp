@@ -9,7 +9,7 @@
 /***********************************************
 Constants
 ***********************************************/
-static Task tasks[] = {
+Task tasks[static_cast<int>(TaskId::COUNT)] = {
     {TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE, task_video_capture},
     {TaskId::VIDEO_PROC, TaskPriority::VIDEO_PROC, task_video_proc},
 #ifdef DIAGNOSTICS_ENABLED
@@ -40,6 +40,9 @@ void task_init() {
     for (Task& task : tasks) {
         task.start();
     }
+}
+
+void task_shutdown() {
     for (Task& task : tasks) {
         task.join();
     }
