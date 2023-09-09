@@ -17,10 +17,10 @@ Functions
 
 /******************************************************************************
  * @brief Video processing task
- * @param arg TODO
+ * @param arg
  * @return TODO
  *****************************************************************************/
-void* task_video_process(void* arg) {
+void* VideoProcessTask(void* arg) {
     while (!shutting_down) {
     }
     std::cout << "Shutting down video processing\n";

@@ -22,20 +22,20 @@ Task tasks[static_cast<int>(TaskId::COUNT)] = {
         TaskId::VIDEO_CAPTURE,
         TaskPriority::VIDEO_CAPTURE,
         TaskUpdatePeriodMs::VIDEO_CAPTURE,
-        task_video_capture,
+        VideoCaptureTask,
     },
     {
         TaskId::VIDEO_PROCESS,
         TaskPriority::VIDEO_PROCESS,
         TaskUpdatePeriodMs::VIDEO_PROCESS,
-        task_video_process,
+        VideoProcessTask,
     },
 #ifdef DIAGNOSTICS_ENABLED
     {
         TaskId::DIAGNOSTICS,
         TaskPriority::DIAGNOSTICS,
         TaskUpdatePeriodMs::DIAGNOSTICS,
-        task_diagnostics,
+        DiagnosticsTask,
     }
 #endif
 };

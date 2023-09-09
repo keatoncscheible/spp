@@ -20,7 +20,7 @@ Functions
  * @param arg TODO
  * @return TODO
  *****************************************************************************/
-void* task_video_capture(void* arg) {
+void* VideoCaptureTask(void* arg) {
     while (!shutting_down) {
     }
     std::cout << "Shutting down video capture\n";

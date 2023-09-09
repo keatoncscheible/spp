@@ -15,6 +15,6 @@ Defines
 /***********************************************
 Function Prototypes
 ***********************************************/
-void* task_diagnostics(void* arg);
+void* DiagnosticsTask(void* arg);
 
 #endif  // DIAGNOSTICS_H
