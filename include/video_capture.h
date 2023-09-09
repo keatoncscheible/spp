@@ -11,6 +11,6 @@
 /***********************************************
 Function Prototypes
 ***********************************************/
-void* VideoCaptureTask(Task* task);
+void VideoCaptureTask(Task* task);
 
 #endif  // VIDEO_CAPTURE_H

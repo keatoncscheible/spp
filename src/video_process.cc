@@ -22,9 +22,8 @@ Functions
  * @param arg
  * @return TODO
  *****************************************************************************/
-void* VideoProcessTask(Task* task) {
+void VideoProcessTask(Task* task) {
     while (!shutting_down) {
     }
     std::cout << "Shutting down video processing\n";
-    return nullptr;
 }

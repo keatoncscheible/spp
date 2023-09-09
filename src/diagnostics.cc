@@ -8,70 +8,22 @@
 
 #include "diagnostics.h"
 
-#include <pthread.h>
-#include <stdint.h>
-#include <time.h>
-
 #include <atomic>
+#include <chrono>
+#include <condition_variable>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-
-#include "task.h"
-#include "time_defs.h"
+#include <mutex>
 
 extern std::atomic<bool> shutting_down;
 
 namespace fs = std::filesystem;
 
-/***********************************************
-Functions
-***********************************************/
-
-/******************************************************************************
- * @brief Helper function to add timespec values
- *
- * This function calculates the sum of two timespec values, considering
- * possible overflow in the nanosecond field.
- *
- * @param result Reference to the result timespec.
- * @param ts1    First timespec value.
- * @param ts2    Second timespec value to be added.
- *****************************************************************************/
-static void TimespecAdd(struct timespec& result, const struct timespec& ts1,
-                        const struct timespec& ts2) {
-    result.tv_sec = ts1.tv_sec + ts2.tv_sec;
-    result.tv_nsec = ts1.tv_nsec + ts2.tv_nsec;
-
-    // Normalize the timespec (handle overflow)
-    if (result.tv_nsec >= NS_PER_SEC) {
-        result.tv_sec++;
-        result.tv_nsec -= NS_PER_SEC;
-    }
-}
-
-/******************************************************************************
- * @brief Diagnostics task function.
- *
- * This function is responsible for generating diagnostics information and
- * writing it to a file at regular intervals.
- *
- * @param arg Pointer to the Task object for the diagnostics task.
- * @return nullptr.
- *****************************************************************************/
-void* DiagnosticsTask(Task* task) {
-    uint64_t period_ms = static_cast<uint64_t>(task->period_ms);
-    struct timespec delay;
-    delay.tv_sec = period_ms / MS_PER_SEC;
-    delay.tv_nsec = (period_ms - delay.tv_sec * MS_PER_SEC) * NS_PER_MS;
-
-    // Initialize a mutex for synchronization
-    pthread_mutex_t mutex;
-    pthread_mutex_init(&mutex, nullptr);
-
-    // Initialize a condition variable for timed waiting
-    pthread_cond_t cond;
-    pthread_cond_init(&cond, nullptr);
+void DiagnosticsTask(Task* task) {
+    auto period_ms = task->period_ms;
+    std::mutex mutex;
+    std::condition_variable cond;
 
     // Check if the diagnostics folder exists; if not, create it
     if (!fs::exists(DIAGNOSTICS_FOLDER)) {
@@ -86,25 +38,16 @@ void* DiagnosticsTask(Task* task) {
     int iter = 0;
     while (!shutting_down) {
         iter++;
-        pthread_mutex_lock(&mutex);
-
-        // Calculate the absolute time for timedwait
-        struct timespec abs_time;
-        clock_gettime(CLOCK_REALTIME, &abs_time);
-        TimespecAdd(abs_time, abs_time, delay);
-        pthread_cond_timedwait(&cond, &mutex, &abs_time);
+        std::unique_lock<std::mutex> lock(mutex);
+        cond.wait_for(lock, period_ms);
 
         // Write diagnostics information to the log file
         log_file << "Diagnostics: " << iter << "\n";
         log_file.seekp(0);
-
-        pthread_mutex_unlock(&mutex);
     }
 
     // Close the log file and clean up resources
     log_file.close();
-    pthread_mutex_destroy(&mutex);
-    pthread_cond_destroy(&cond);
 
     try {
         // If the diagnostics folder exists, remove it and its contents
@@ -117,6 +60,4 @@ void* DiagnosticsTask(Task* task) {
     } catch (const std::filesystem::filesystem_error& e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
-
-    return nullptr;
 }

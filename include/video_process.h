@@ -11,6 +11,6 @@
 /***********************************************
 Function Prototypes
 ***********************************************/
-void* VideoProcessTask(Task* task);
+void VideoProcessTask(Task* task);
 
 #endif  // VIDEO_PROCESS_H

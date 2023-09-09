@@ -6,17 +6,16 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <pthread.h>
-
-#include "time_defs.h"
+#include <chrono>
+#include <thread>
 
 // Forward declaration of Task class
 class Task;
 
 /***********************************************
-Typedefs
+Aliases
 ***********************************************/
-typedef void* (*TaskFunction)(Task*);
+using TaskFunction = void (*)(Task*);
 
 /***********************************************
 Enums
@@ -53,7 +52,7 @@ class Task {
    public:
     Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
          TaskFunction function);
-    TaskUpdatePeriodMs period_ms;
+    std::chrono::milliseconds period_ms;
 
     void start();
     void join();
@@ -62,9 +61,7 @@ class Task {
     TaskId id_;
     TaskPriority priority_;
     TaskFunction function_;
-    pthread_t thread_;
-    pthread_attr_t attr_;
-    struct sched_param param_;
+    std::thread thread_;
 };
 
 /***********************************************
