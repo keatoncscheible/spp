@@ -1,3 +1,9 @@
+/******************************************************************************
+ * Filename:    main.cpp
+ * Description: Entry point of the applicaton
+ * Copyright (c) 2023 Keaton Scheible
+ *****************************************************************************/
+
 #include <unistd.h>
 
 #include <atomic>
@@ -19,6 +25,7 @@ void SignalHandler(int signum) {
     }
 }
 
+// Entry point of the application
 int main(int argc, char* argv[]) {
     signal(SIGINT, SignalHandler);
 

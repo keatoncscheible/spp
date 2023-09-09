@@ -1,31 +1,56 @@
+/******************************************************************************
+ * Filename:    task.h
+ * Copyright (c) 2023 Keaton Scheible
+ *****************************************************************************/
+
+#ifndef TASK_H
+#define TASK_H
+
 #include <pthread.h>
 
+#include "time_defs.h"
+
 /***********************************************
-Types
+Typedefs
+***********************************************/
+typedef void* (*TaskFunction)(void*);
+
+/***********************************************
+Enums
 ***********************************************/
 enum class TaskId {
     VIDEO_CAPTURE,
-    VIDEO_PROC,
+    VIDEO_PROCESS,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
 #endif
     COUNT
 };
+
 enum class TaskPriority {
     VIDEO_CAPTURE = 1,
-    VIDEO_PROC,
+    VIDEO_PROCESS,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
 #endif
 };
-typedef void* (*TaskFunction)(void*);
+
+enum class TaskUpdatePeriodMs {
+    VIDEO_CAPTURE = 0,
+    VIDEO_PROCESS = 0,
+#ifdef DIAGNOSTICS_ENABLED
+    DIAGNOSTICS = 1000,
+#endif
+};
 
 /***********************************************
 Classes
 ***********************************************/
 class Task {
    public:
-    Task(TaskId id, TaskPriority priority, TaskFunction function);
+    Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
+         TaskFunction function);
+    TaskUpdatePeriodMs period_ms;
 
     void start();
     void join();
@@ -45,7 +70,9 @@ Variables
 extern Task tasks[static_cast<int>(TaskId::COUNT)];
 
 /***********************************************
-Functions
+Function Prototypes
 ***********************************************/
 void task_init();
 void task_shutdown();
+
+#endif  // TASK_H

@@ -1,14 +1,16 @@
 /******************************************************************************
- * Filename:    video_capture.h
+ * Filename:    time_defs.h
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
-#ifndef VIDEO_CAPTURE_H
-#define VIDEO_CAPTURE_H
+#ifndef TIME_DEFS_H
+#define TIME_DEFS_H
 
 /***********************************************
-Function Prototypes
+Defines
 ***********************************************/
-void* task_video_capture(void* arg);
+#define NS_PER_SEC 1e9
+#define MS_PER_SEC 1e3
+#define NS_PER_MS 1e6
 
-#endif  // VIDEO_CAPTURE_H
+#endif  // TIME_DEFS_H
