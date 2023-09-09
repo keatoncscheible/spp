@@ -34,6 +34,9 @@ void DiagnosticsTask(Task* task) {
 
     // Open a file for writing diagnostics information
     std::ofstream log_file(DIAGNOSTICS_FILE, std::ios::out | std::ios::trunc);
+    if (!log_file.is_open()) {
+        std::cerr << "Failed to open " << DIAGNOSTICS_FILE << std::endl;
+    }
 
     int iter = 0;
     while (!shutting_down) {

@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <thread>
 
 #include "diagnostics.h"
 #include "task.h"
@@ -30,11 +31,12 @@ void SignalHandler(int signum) {
 
 // Entry point of the application
 int main(int argc, char* argv[]) {
-    signal(SIGINT, SignalHandler);
+    std::signal(SIGINT, SignalHandler);
 
     task_init();
 
     while (!shutting_down) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     task_shutdown();
