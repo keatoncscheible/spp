@@ -10,8 +10,6 @@
 
 #include <atomic>
 #include <csignal>
-#include <cstdlib>
-#include <fstream>
 #include <iostream>
 #include <thread>
 
@@ -36,7 +34,8 @@ int main(int argc, char* argv[]) {
     task_init();
 
     while (!shutting_down) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        constexpr int64_t kSleepDuration = 100;
+        std::this_thread::sleep_for(std::chrono::milliseconds(kSleepDuration));
     }
 
     task_shutdown();

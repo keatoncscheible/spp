@@ -9,7 +9,7 @@
 
 #include <pthread.h>
 
-#include <cerrno>
+#include <array>
 #include <cstring>
 #include <iostream>
 
@@ -20,28 +20,16 @@
 /***********************************************
 Constants
 ***********************************************/
-Task tasks[static_cast<int>(TaskId::COUNT)] = {
-    {
-        TaskId::VIDEO_CAPTURE,
-        TaskPriority::VIDEO_CAPTURE,
-        TaskUpdatePeriodMs::VIDEO_CAPTURE,
-        VideoCaptureTask,
-    },
-    {
-        TaskId::VIDEO_PROCESS,
-        TaskPriority::VIDEO_PROCESS,
-        TaskUpdatePeriodMs::VIDEO_PROCESS,
-        VideoProcessTask,
-    },
+std::array<Task, static_cast<int>(TaskId::COUNT)> tasks = {{
+    Task(TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE,
+         TaskUpdatePeriodMs::VIDEO_CAPTURE, VideoCaptureTask),
+    Task(TaskId::VIDEO_PROCESS, TaskPriority::VIDEO_PROCESS,
+         TaskUpdatePeriodMs::VIDEO_PROCESS, VideoProcessTask),
 #ifdef DIAGNOSTICS_ENABLED
-    {
-        TaskId::DIAGNOSTICS,
-        TaskPriority::DIAGNOSTICS,
-        TaskUpdatePeriodMs::DIAGNOSTICS,
-        DiagnosticsTask,
-    }
+    Task(TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS,
+         TaskUpdatePeriodMs::DIAGNOSTICS, DiagnosticsTask),
 #endif
-};
+}};
 
 Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
            TaskFunction function)

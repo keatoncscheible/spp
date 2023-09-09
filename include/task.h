@@ -67,7 +67,7 @@ class Task {
 /***********************************************
 Variables
 ***********************************************/
-extern Task tasks[static_cast<int>(TaskId::COUNT)];
+extern std::array<Task, static_cast<int>(TaskId::COUNT)> tasks;
 
 /***********************************************
 Function Prototypes
