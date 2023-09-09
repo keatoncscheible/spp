@@ -6,6 +6,8 @@
 #ifndef DIAGNOSTICS_H
 #define DIAGNOSTICS_H
 
+#include "task.h"
+
 /***********************************************
 Defines
 ***********************************************/
@@ -15,6 +17,6 @@ Defines
 /***********************************************
 Function Prototypes
 ***********************************************/
-void* DiagnosticsTask(void* arg);
+void* DiagnosticsTask(Task* task);
 
 #endif  // DIAGNOSTICS_H

@@ -69,7 +69,10 @@ Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
  *
  * This function creates a new thread and assigns it the task's function.
  *****************************************************************************/
-void Task::start() { pthread_create(&thread_, &attr_, function_, this); }
+void Task::start() {
+    pthread_create(&thread_, &attr_,
+                   reinterpret_cast<void* (*)(void*)>(function_), this);
+}
 
 /******************************************************************************
  * @brief Waits for the task to complete and cleans up resources.

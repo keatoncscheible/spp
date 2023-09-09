@@ -10,10 +10,13 @@
 
 #include "time_defs.h"
 
+// Forward declaration of Task class
+class Task;
+
 /***********************************************
 Typedefs
 ***********************************************/
-typedef void* (*TaskFunction)(void*);
+typedef void* (*TaskFunction)(Task*);
 
 /***********************************************
 Enums

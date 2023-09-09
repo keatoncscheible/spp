@@ -6,9 +6,11 @@
 #ifndef VIDEO_CAPTURE_H
 #define VIDEO_CAPTURE_H
 
+#include "task.h"
+
 /***********************************************
 Function Prototypes
 ***********************************************/
-void* VideoCaptureTask(void* arg);
+void* VideoCaptureTask(Task* task);
 
 #endif  // VIDEO_CAPTURE_H

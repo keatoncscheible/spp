@@ -9,6 +9,8 @@
 #include <atomic>
 #include <iostream>
 
+#include "task.h"
+
 extern std::atomic<bool> shutting_down;
 
 /***********************************************
@@ -20,7 +22,7 @@ Functions
  * @param arg
  * @return TODO
  *****************************************************************************/
-void* VideoProcessTask(void* arg) {
+void* VideoProcessTask(Task* task) {
     while (!shutting_down) {
     }
     std::cout << "Shutting down video processing\n";

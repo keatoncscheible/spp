@@ -59,8 +59,7 @@ static void TimespecAdd(struct timespec& result, const struct timespec& ts1,
  * @param arg Pointer to the Task object for the diagnostics task.
  * @return nullptr.
  *****************************************************************************/
-void* DiagnosticsTask(void* arg) {
-    Task* task = static_cast<Task*>(arg);
+void* DiagnosticsTask(Task* task) {
     uint64_t period_ms = static_cast<uint64_t>(task->period_ms);
     struct timespec delay;
     delay.tv_sec = period_ms / MS_PER_SEC;
