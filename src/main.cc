@@ -1,6 +1,8 @@
 /******************************************************************************
  * Filename:    main.cpp
- * Description: Entry point of the applicaton
+ * Description: Entry point of the application. Sets up signal handling,
+ *              initializes tasks, and waits for them to complete before
+ *              shutting down.
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 

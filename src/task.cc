@@ -1,6 +1,7 @@
 /******************************************************************************
  * Filename:    task.cpp
- * Description: Task definitions
+ * Description: Task definitions for the application. This file defines task
+ *              creation, management, and cleanup.
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 

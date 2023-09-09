@@ -1,8 +1,8 @@
 /******************************************************************************
  * Filename:    diagnostics.cpp
- * Description: Diagnostics task implementation
- *              This file defines the behavior of the diagnostics task,
- *              responsible for generating diagnostics information.
+ * Description: Diagnostics task implementation. This file defines the behavior
+ *              of the diagnostics task, responsible for generating diagnostics
+ *              information and writing it to a file at regular intervals.
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
