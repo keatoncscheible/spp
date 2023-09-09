@@ -15,6 +15,7 @@
 #include "diagnostics.h"
 #include "task.h"
 
+// Used to gracefully shutdown tasks
 std::atomic<bool> shutting_down(false);
 
 // Signal handler function to handle Ctrl+C

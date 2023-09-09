@@ -14,11 +14,11 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Add your source files here
 set(SOURCES
-    ${SOURCE_DIR}/main.cpp
-    ${SOURCE_DIR}/diagnostics.cpp
-    ${SOURCE_DIR}/video_capture.cpp
-    ${SOURCE_DIR}/video_process.cpp
-    ${SOURCE_DIR}/task.cpp
+    ${SOURCE_DIR}/main.cc
+    ${SOURCE_DIR}/diagnostics.cc
+    ${SOURCE_DIR}/video_capture.cc
+    ${SOURCE_DIR}/video_process.cc
+    ${SOURCE_DIR}/task.cc
 )
 
 add_executable(image_processing_learning_app ${SOURCES})
