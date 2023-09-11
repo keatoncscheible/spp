@@ -11,6 +11,7 @@ set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 set(OpenCV_DIR "/usr/local/src/opencv/build")
 
 find_package(OpenCV REQUIRED)
+message(STATUS "Found OpenCV version: ${OpenCV_VERSION}")
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Add your source files here
