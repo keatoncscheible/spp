@@ -14,6 +14,7 @@
 #include <thread>
 
 #include "diagnostics.h"
+#include "error_handling.h"
 #include "task.h"
 #include "video_capture.h"
 #include "video_process.h"
@@ -30,25 +31,37 @@ void SignalHandler(int signum) {
 }
 
 // Entry point of the application
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     std::signal(SIGINT, SignalHandler);
 
-    VideoCapture video_capture;
-    VideoProcess video_process(video_capture);
-    Diagnostics diagnostics(video_capture, video_process);
+    try {
+        VideoCapture video_capture;
+        VideoProcess video_process(video_capture);
+        Diagnostics diagnostics(video_capture, video_process);
 
-    video_capture.Start();
-    video_process.Start();
-    diagnostics.Start();
+        video_capture.Start();
+        video_process.Start();
+        diagnostics.Start();
 
-    while (!shutting_down) {
-        constexpr int64_t kSleepDuration = 100;
-        std::this_thread::sleep_for(std::chrono::milliseconds(kSleepDuration));
+        while (!shutting_down) {
+            constexpr int64_t kSleepDuration = 100;
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(kSleepDuration));
+        }
+
+        diagnostics.Join();
+        video_process.Join();
+        video_capture.Join();
+
+    } catch (const VideoCaptureException &vce) {
+        std::cerr << "File error: " << vce.what() << std::endl;
+    } catch (const VideoProcessException &vpe) {
+        std::cerr << "Video error: " << vpe.what() << std::endl;
+    } catch (const DiagnosticsException &de) {
+        std::cerr << "Video error: " << de.what() << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << "An error occurred: " << e.what() << std::endl;
     }
-
-    diagnostics.Join();
-    video_process.Join();
-    video_capture.Join();
 
     return 0;
 }

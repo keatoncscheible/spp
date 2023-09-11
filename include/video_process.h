@@ -17,12 +17,12 @@ class VideoProcess {
     ~VideoProcess();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
-    static void VideoProcessFunction(Task* task);
 
    private:
+    const char* kWindowName = "Video";
+    static void VideoProcessFunction(Task* task);
     Task task_;
     VideoCapture& video_capture_;
-    const char* kWindowName = "Video";
 };
 
 #endif  // VIDEO_PROCESS_H

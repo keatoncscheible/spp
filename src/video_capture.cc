@@ -9,22 +9,38 @@
 #include <atomic>
 #include <iostream>
 
+#include "error_handling.h"
+
 extern std::atomic<bool> shutting_down;
 
 VideoCapture::VideoCapture()
     : task_(TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE,
             TaskUpdatePeriodMs::VIDEO_CAPTURE, VideoCaptureFunction) {
     task_.SetData(this);
-
-    if (!capture_.isOpened()) {
-        std::cerr << "Error: Cannot open webcam!" << std::endl;
-        return;
-    }
+    StartCapture();
 }
 
 VideoCapture::~VideoCapture() {
-    capture_.release();
+    StopCapture();
     std::cout << "Shutting down video capture\n";
+}
+
+void VideoCapture::StartCapture() {
+    capture_.open(0);
+    if (!capture_.isOpened()) {
+        throw VideoCaptureException("Failed to start video capture");
+    }
+}
+void VideoCapture::StopCapture() {
+    try {
+        if (capture_.isOpened()) {
+            capture_.release();
+        }
+    } catch (const std::exception& e) {
+        std::string error_message =
+            "Error removing diagnostics folder: " + std::string(e.what());
+        throw VideoCaptureException(error_message);
+    }
 }
 
 void VideoCapture::VideoCaptureFunction(Task* task) {

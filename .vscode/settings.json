@@ -69,6 +69,11 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "csignal": "cpp",
-        "codecvt": "cpp"
-    }
+        "codecvt": "cpp",
+        "filesystem": "cpp"
+    },
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "readability-identifier-length",
+        "readability-convert-member-functions-to-static"
+    ]
 }

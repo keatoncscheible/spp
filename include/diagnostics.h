@@ -16,26 +16,24 @@
 #include "video_capture.h"
 #include "video_process.h"
 
-/***********************************************
-Defines
-***********************************************/
-#define DIAGNOSTICS_FOLDER "diagnostics"
-#define DIAGNOSTICS_FILE DIAGNOSTICS_FOLDER "/diagnostics_out.txt"
-
-/***********************************************
-Function Prototypes
-***********************************************/
 class Diagnostics {
    public:
     Diagnostics(VideoCapture& video_capture, VideoProcess& video_process);
     ~Diagnostics();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
-    static void DiagnosticsFunction(Task* task);
-    std::mutex mutex_;
-    std::condition_variable cond_;
+    std::mutex mutex;
+    std::condition_variable cond;
 
    private:
+    const std::string kDiagonsticsFolder = "diagnostics";
+    const std::string kDiagonsticsFile =
+        kDiagonsticsFolder + "/diagnostics_out.txt";
+    static void DiagnosticsFunction(Task* task);
+    void CreateDiagnosticsFolder();
+    void OpenDiagnosticsFile();
+    void CloseDiagnosticsFile();
+    void RemoveDiagnosticsFolder();
     Task task_;
     VideoCapture& video_capture_;
     VideoProcess& video_process_;

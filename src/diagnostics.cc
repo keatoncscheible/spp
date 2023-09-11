@@ -16,6 +16,8 @@
 #include <iostream>
 #include <mutex>
 
+#include "error_handling.h"
+
 extern std::atomic<bool> shutting_down;
 
 namespace fs = std::filesystem;
@@ -27,36 +29,46 @@ Diagnostics::Diagnostics(VideoCapture& video_capture,
       task_(TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS,
             TaskUpdatePeriodMs::DIAGNOSTICS, DiagnosticsFunction) {
     task_.SetData(this);
-
-    // Check if the diagnostics folder exists; if not, create it
-    if (!fs::exists(DIAGNOSTICS_FOLDER)) {
-        if (!fs::create_directory(DIAGNOSTICS_FOLDER)) {
-            std::cerr << "Failed to create directory: " << DIAGNOSTICS_FOLDER
-                      << ". Error: " << strerror(errno) << std::endl;
-            return;  // If we can't create the directory, don't proceed further.
-        }
-    }
-
-    // Open a file for writing diagnostics information
-    diagnostics_log_.open(DIAGNOSTICS_FILE, std::ios::out | std::ios::trunc);
-    if (!diagnostics_log_.is_open()) {
-        std::cerr << "Failed to open file: " << DIAGNOSTICS_FILE
-                  << ". Error: " << strerror(errno) << std::endl;
-    }
+    CreateDiagnosticsFolder();
+    OpenDiagnosticsFile();
 }
 
 Diagnostics::~Diagnostics() {
+    CloseDiagnosticsFile();
+    RemoveDiagnosticsFolder();
+    std::cout << "Shutting down diagnostics\n";
+}
+
+void Diagnostics::CreateDiagnosticsFolder() {
+    if (!fs::exists(kDiagonsticsFolder)) {
+        if (!fs::create_directory(kDiagonsticsFolder)) {
+            throw DiagnosticsException("Error creating diagnostics folder");
+        }
+    }
+}
+
+void Diagnostics::OpenDiagnosticsFile() {
+    diagnostics_log_.open(kDiagonsticsFile, std::ios::out);
+    if (!diagnostics_log_.is_open()) {
+        throw DiagnosticsException("Error creating diagnostics file");
+    }
+}
+
+void Diagnostics::CloseDiagnosticsFile() {
     diagnostics_log_.close();
+    if (diagnostics_log_.fail()) {
+        throw DiagnosticsException("Error closing diagnostics file");
+    }
+}
+void Diagnostics::RemoveDiagnosticsFolder() {
     try {
-        // If the diagnostics folder exists, remove it and its contents
-        if (std::filesystem::exists(DIAGNOSTICS_FOLDER)) {
-            std::filesystem::remove_all(DIAGNOSTICS_FOLDER);
-            std::cout << "Cleaning up diagnostics info\n";
-        } else {
-            std::cerr << "No diagnostics info found" << std::endl;
+        if (std::filesystem::exists(kDiagonsticsFolder)) {
+            std::filesystem::remove_all(kDiagonsticsFolder);
         }
     } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        std::string error_message =
+            "Error removing diagnostics folder: " + std::string(e.what());
+        throw DiagnosticsException(error_message);
     }
 }
 
@@ -66,8 +78,8 @@ void Diagnostics::DiagnosticsFunction(Task* task) {
     int iter = 0;
     while (!shutting_down) {
         iter++;
-        std::unique_lock<std::mutex> lock(self->mutex_);
-        self->cond_.wait_for(lock, task->period_ms);
+        std::unique_lock<std::mutex> lock(self->mutex);
+        self->cond.wait_for(lock, task->period_ms);
 
         // Write diagnostics information to the log file
         self->diagnostics_log_ << "Diagnostics: " << iter << "\n";

@@ -17,14 +17,17 @@ class VideoCapture {
     ~VideoCapture();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
-    static void VideoCaptureFunction(Task* task);
     cv::Mat* GetCurrentFrame();
     std::mutex mutex_;
     std::condition_variable cond_;
 
    private:
-    cv::VideoCapture capture_{0};
+    static void VideoCaptureFunction(Task* task);
+    cv::VideoCapture capture_;
+    void StartCapture();
+    void StopCapture();
     Task task_;
+
     cv::Mat buffer1_, buffer2_;
     cv::Mat* current_buffer_ = &buffer1_;
     cv::Mat* next_buffer_ = &buffer2_;
