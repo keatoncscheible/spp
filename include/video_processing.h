@@ -7,6 +7,7 @@
 #define VIDEO_PROCESSING_H
 
 #include <condition_variable>
+#include <mutex>
 #include <opencv2/opencv.hpp>
 
 #include "task.h"
