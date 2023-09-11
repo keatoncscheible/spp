@@ -43,7 +43,7 @@ enum class TaskPriority {
 enum class TaskUpdatePeriodMs {
     VIDEO_CAPTURE = 0,
     VIDEO_PROCESSING = 0,
-    VIDEO_DISPLAY = 0,
+    VIDEO_DISPLAY = 33,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS = 1000,
 #endif

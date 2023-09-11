@@ -11,6 +11,7 @@
 #include <mutex>
 #include <opencv2/opencv.hpp>
 
+#include "error_handling.h"
 #include "video_capture.h"
 
 extern std::atomic<bool> shutting_down;
@@ -18,7 +19,9 @@ extern std::atomic<bool> shutting_down;
 VideoProcessing::VideoProcessing(VideoCapture& video_capture)
     : video_capture_(video_capture),
       task_(TaskId::VIDEO_PROCESSING, TaskPriority::VIDEO_PROCESSING,
-            TaskUpdatePeriodMs::VIDEO_PROCESSING, VideoProcessingFunction) {
+            TaskUpdatePeriodMs::VIDEO_PROCESSING, VideoProcessingFunction),
+      current_buffer_(buffer1_),
+      next_buffer_(buffer2_) {
     task_.SetData(this);
 }
 
@@ -34,10 +37,10 @@ void VideoProcessing::VideoProcessingFunction(Task* task) {
         {
             std::unique_lock<std::mutex> lock(self->video_capture_.mutex_);
             self->video_capture_.cond_.wait(lock);
-            frame = *(self->video_capture_.GetFrame());
+            frame = self->video_capture_.GetFrame();
         }
 
-        *(self->next_buffer_) = self->ProcessVideo(frame);
+        (self->next_buffer_) = self->ProcessVideo(frame);
 
         {
             std::lock_guard<std::mutex> lock(self->mutex_);
@@ -49,6 +52,9 @@ void VideoProcessing::VideoProcessingFunction(Task* task) {
 }
 
 cv::Mat& VideoProcessing::ProcessVideo(cv::Mat& frame) {
+    if (frame.empty()) {
+        std::cerr << "Cannot process empty frame\n";
+    }
     cv::cvtColor(frame, frame, cv::COLOR_BGR2HLS);
     return frame;
 }

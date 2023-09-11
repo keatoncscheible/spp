@@ -18,7 +18,7 @@ class VideoProcessing {
     ~VideoProcessing();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
-    cv::Mat* GetFrame() { return current_buffer_; }
+    cv::Mat& GetFrame() { return current_buffer_; }
     std::mutex mutex_;
     std::condition_variable cond_;
 
@@ -28,8 +28,8 @@ class VideoProcessing {
     Task task_;
     VideoCapture& video_capture_;
     cv::Mat buffer1_, buffer2_;
-    cv::Mat* current_buffer_ = &buffer1_;
-    cv::Mat* next_buffer_ = &buffer2_;
+    cv::Mat& current_buffer_;
+    cv::Mat& next_buffer_;
 };
 
 #endif  // VIDEO_PROCESSING_H

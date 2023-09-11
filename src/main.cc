@@ -25,7 +25,7 @@ std::atomic<bool> shutting_down(false);
 
 // Signal handler function to handle Ctrl+C
 void SignalHandler(int signum) {
-    if (signum == SIGINT) {
+    if (signum == SIGINT || signum == SIGTERM) {
         std::cout << "\nClosing Application..." << std::endl;
         shutting_down = true;
     }

@@ -7,6 +7,8 @@
 #include "video_display.h"
 
 #include <atomic>
+#include <chrono>
+#include <cstdint>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
@@ -33,19 +35,27 @@ void VideoDisplay::VideoDisplayFunction(Task* task) {
 
     cv::Mat frame;
     while (!shutting_down) {
+        auto start = std::chrono::high_resolution_clock::now();
         self->DisplayVideo();
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed =
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+                .count();
+        int sleep_time = self->task_.period_ms.count() - elapsed;
+
+        if (sleep_time > 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+        };
     }
 }
 
 void VideoDisplay::DisplayVideo() {
-    VideoDisplay* self = static_cast<VideoDisplay*>(task_.GetData());
-
     cv::Mat frame;
     {
-        std::unique_lock<std::mutex> lock(self->video_processing_.mutex_);
-        self->video_processing_.cond_.wait(lock);
-        frame = *(self->video_processing_.GetFrame());
+        std::unique_lock<std::mutex> lock(video_processing_.mutex_);
+        video_processing_.cond_.wait(lock);
+        frame = video_processing_.GetFrame();
     }
-    cv::imshow(self->kWindowName, frame);
+    cv::imshow(kWindowName, frame);
     cv::waitKey(1);
 }

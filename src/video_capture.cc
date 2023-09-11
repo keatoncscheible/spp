@@ -15,7 +15,9 @@ extern std::atomic<bool> shutting_down;
 
 VideoCapture::VideoCapture()
     : task_(TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE,
-            TaskUpdatePeriodMs::VIDEO_CAPTURE, VideoCaptureFunction) {
+            TaskUpdatePeriodMs::VIDEO_CAPTURE, VideoCaptureFunction),
+      current_buffer_(buffer1_),
+      next_buffer_(buffer2_) {
     task_.SetData(this);
     StartCapture();
 }
@@ -26,6 +28,9 @@ VideoCapture::~VideoCapture() {
 }
 
 void VideoCapture::StartCapture() {
+    if (capture_.isOpened()) {
+        return;
+    }
     capture_.open(0);
     if (!capture_.isOpened()) {
         throw VideoCaptureException("Failed to start video capture");
@@ -38,7 +43,7 @@ void VideoCapture::StopCapture() {
         }
     } catch (const std::exception& e) {
         std::string error_message =
-            "Error removing diagnostics folder: " + std::string(e.what());
+            "Error stopping video capture: " + std::string(e.what());
         throw VideoCaptureException(error_message);
     }
 }
@@ -47,9 +52,9 @@ void VideoCapture::VideoCaptureFunction(Task* task) {
     VideoCapture* self = static_cast<VideoCapture*>(task->GetData());
 
     while (!shutting_down) {
-        self->capture_ >> *(self->next_buffer_);
+        self->capture_ >> (self->next_buffer_);
 
-        if (self->next_buffer_->empty()) {
+        if (self->next_buffer_.empty()) {
             std::cerr << "Failed to capture frame." << std::endl;
             continue;
         }
