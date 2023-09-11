@@ -14,11 +14,11 @@
 
 #include "task.h"
 #include "video_capture.h"
-#include "video_process.h"
+#include "video_processing.h"
 
 class Diagnostics {
    public:
-    Diagnostics(VideoCapture& video_capture, VideoProcess& video_process);
+    Diagnostics(VideoCapture& video_capture, VideoProcessing& video_processing);
     ~Diagnostics();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
@@ -36,7 +36,7 @@ class Diagnostics {
     void RemoveDiagnosticsFolder();
     Task task_;
     VideoCapture& video_capture_;
-    VideoProcess& video_process_;
+    VideoProcessing& video_processing_;
     std::ofstream diagnostics_log_;
 };
 

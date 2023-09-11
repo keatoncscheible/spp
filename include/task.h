@@ -23,7 +23,7 @@ Enums
 ***********************************************/
 enum class TaskId {
     VIDEO_CAPTURE,
-    VIDEO_PROCESS,
+    VIDEO_PROCESSING,
     VIDEO_DISPLAY,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
@@ -33,7 +33,7 @@ enum class TaskId {
 
 enum class TaskPriority {
     VIDEO_CAPTURE = 1,
-    VIDEO_PROCESS,
+    VIDEO_PROCESSING,
     VIDEO_DISPLAY,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
@@ -42,7 +42,7 @@ enum class TaskPriority {
 
 enum class TaskUpdatePeriodMs {
     VIDEO_CAPTURE = 0,
-    VIDEO_PROCESS = 0,
+    VIDEO_PROCESSING = 0,
     VIDEO_DISPLAY = 0,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS = 1000,

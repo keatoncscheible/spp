@@ -9,11 +9,11 @@
 #include <opencv2/opencv.hpp>
 
 #include "task.h"
-#include "video_process.h"
+#include "video_processing.h"
 
 class VideoDisplay {
    public:
-    VideoDisplay(VideoProcess& video_process_);
+    VideoDisplay(VideoProcessing& video_processing_);
     ~VideoDisplay();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
@@ -23,7 +23,7 @@ class VideoDisplay {
     static void VideoDisplayFunction(Task* task);
     void DisplayVideo();
     Task task_;
-    VideoProcess& video_process_;
+    VideoProcessing& video_processing_;
 };
 
 #endif  // VIDEO_DISPLAY_H

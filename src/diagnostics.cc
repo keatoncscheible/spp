@@ -17,15 +17,17 @@
 #include <mutex>
 
 #include "error_handling.h"
+#include "video_capture.h"
+#include "video_processing.h"
 
 extern std::atomic<bool> shutting_down;
 
 namespace fs = std::filesystem;
 
 Diagnostics::Diagnostics(VideoCapture& video_capture,
-                         VideoProcess& video_process)
+                         VideoProcessing& video_processing)
     : video_capture_(video_capture),
-      video_process_(video_process),
+      video_processing_(video_processing),
       task_(TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS,
             TaskUpdatePeriodMs::DIAGNOSTICS, DiagnosticsFunction) {
     task_.SetData(this);

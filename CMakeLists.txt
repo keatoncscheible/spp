@@ -20,7 +20,7 @@ set(SOURCES
     ${SOURCE_DIR}/diagnostics.cc
     ${SOURCE_DIR}/video_capture.cc
     ${SOURCE_DIR}/video_display.cc
-    ${SOURCE_DIR}/video_process.cc
+    ${SOURCE_DIR}/video_processing.cc
     ${SOURCE_DIR}/task.cc
 )
 

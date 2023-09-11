@@ -1,10 +1,10 @@
 /******************************************************************************
- * Filename:    video_process.h
+ * Filename:    video_processing.h
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
-#ifndef VIDEO_PROCESS_H
-#define VIDEO_PROCESS_H
+#ifndef VIDEO_PROCESSING_H
+#define VIDEO_PROCESSING_H
 
 #include <condition_variable>
 #include <opencv2/opencv.hpp>
@@ -12,10 +12,10 @@
 #include "task.h"
 #include "video_capture.h"
 
-class VideoProcess {
+class VideoProcessing {
    public:
-    VideoProcess(VideoCapture& video_capture_);
-    ~VideoProcess();
+    VideoProcessing(VideoCapture& video_capture_);
+    ~VideoProcessing();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
     cv::Mat* GetFrame() { return current_buffer_; }
@@ -23,7 +23,7 @@ class VideoProcess {
     std::condition_variable cond_;
 
    private:
-    static void VideoProcessFunction(Task* task);
+    static void VideoProcessingFunction(Task* task);
     cv::Mat& ProcessVideo(cv::Mat& frame);
     Task task_;
     VideoCapture& video_capture_;
@@ -32,4 +32,4 @@ class VideoProcess {
     cv::Mat* next_buffer_ = &buffer2_;
 };
 
-#endif  // VIDEO_PROCESS_H
+#endif  // VIDEO_PROCESSING_H

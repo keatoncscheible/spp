@@ -18,9 +18,9 @@ class VideoCaptureException : public std::exception {
     std::string message_;
 };
 
-class VideoProcessException : public std::exception {
+class VideoProcessingException : public std::exception {
    public:
-    explicit VideoProcessException(const std::string& msg) : message_(msg) {}
+    explicit VideoProcessingException(const std::string& msg) : message_(msg) {}
     const char* what() const noexcept override { return message_.c_str(); }
 
    private:

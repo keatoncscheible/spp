@@ -16,7 +16,7 @@
 
 #include "diagnostics.h"
 #include "video_capture.h"
-#include "video_process.h"
+#include "video_processing.h"
 
 Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
            TaskFunction function)

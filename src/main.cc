@@ -18,7 +18,7 @@
 #include "task.h"
 #include "video_capture.h"
 #include "video_display.h"
-#include "video_process.h"
+#include "video_processing.h"
 
 // Used to gracefully shutdown tasks
 std::atomic<bool> shutting_down(false);
@@ -37,12 +37,12 @@ int main(int argc, char *argv[]) {
 
     try {
         VideoCapture video_capture;
-        VideoProcess video_process(video_capture);
-        VideoDisplay video_display(video_process);
-        Diagnostics diagnostics(video_capture, video_process);
+        VideoProcessing video_processing(video_capture);
+        VideoDisplay video_display(video_processing);
+        Diagnostics diagnostics(video_capture, video_processing);
 
         video_capture.Start();
-        video_process.Start();
+        video_processing.Start();
         video_display.Start();
         diagnostics.Start();
 
@@ -54,13 +54,13 @@ int main(int argc, char *argv[]) {
 
         diagnostics.Join();
         video_display.Join();
-        video_process.Join();
+        video_processing.Join();
         video_capture.Join();
 
     } catch (const VideoCaptureException &vce) {
         std::cerr << "Video Capture Error: " << vce.what() << std::endl;
-    } catch (const VideoProcessException &vpe) {
-        std::cerr << "Video Processing Error: " << vpe.what() << std::endl;
+    } catch (const VideoProcessingException &vpe) {
+        std::cerr << "Video Processinging Error: " << vpe.what() << std::endl;
     } catch (const VideoDisplayException &vde) {
         std::cerr << "Video Display Error: " << vde.what() << std::endl;
     } catch (const DiagnosticsException &de) {
