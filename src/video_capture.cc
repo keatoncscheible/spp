@@ -53,11 +53,10 @@ void VideoCapture::VideoCaptureFunction(Task* task) {
             std::cerr << "Failed to capture frame." << std::endl;
             continue;
         }
-        self->mutex_.lock();
-        std::swap(self->current_buffer_, self->next_buffer_);
-        self->mutex_.unlock();
+        {
+            std::lock_guard<std::mutex> lock(self->mutex_);
+            std::swap(self->current_buffer_, self->next_buffer_);
+        }
         self->cond_.notify_one();
     }
 }
-
-cv::Mat* VideoCapture::GetCurrentFrame() { return current_buffer_; }

@@ -17,6 +17,7 @@
 #include "error_handling.h"
 #include "task.h"
 #include "video_capture.h"
+#include "video_display.h"
 #include "video_process.h"
 
 // Used to gracefully shutdown tasks
@@ -37,10 +38,12 @@ int main(int argc, char *argv[]) {
     try {
         VideoCapture video_capture;
         VideoProcess video_process(video_capture);
+        VideoDisplay video_display(video_process);
         Diagnostics diagnostics(video_capture, video_process);
 
         video_capture.Start();
         video_process.Start();
+        video_display.Start();
         diagnostics.Start();
 
         while (!shutting_down) {
@@ -50,15 +53,18 @@ int main(int argc, char *argv[]) {
         }
 
         diagnostics.Join();
+        video_display.Join();
         video_process.Join();
         video_capture.Join();
 
     } catch (const VideoCaptureException &vce) {
-        std::cerr << "File error: " << vce.what() << std::endl;
+        std::cerr << "Video Capture Error: " << vce.what() << std::endl;
     } catch (const VideoProcessException &vpe) {
-        std::cerr << "Video error: " << vpe.what() << std::endl;
+        std::cerr << "Video Processing Error: " << vpe.what() << std::endl;
+    } catch (const VideoDisplayException &vde) {
+        std::cerr << "Video Display Error: " << vde.what() << std::endl;
     } catch (const DiagnosticsException &de) {
-        std::cerr << "Video error: " << de.what() << std::endl;
+        std::cerr << "Diagnostics Error: " << de.what() << std::endl;
     } catch (const std::exception &e) {
         std::cerr << "An error occurred: " << e.what() << std::endl;
     }
