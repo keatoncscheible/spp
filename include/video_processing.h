@@ -10,6 +10,7 @@
 #include <mutex>
 #include <opencv2/opencv.hpp>
 
+#include "statistics.h"
 #include "task.h"
 #include "video_capture.h"
 
@@ -20,6 +21,7 @@ class VideoProcessing {
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
     cv::Mat& GetFrame() { return current_buffer_; }
+    StatisticsQueue<double> time_stats_{100};
     std::mutex mutex_;
     std::condition_variable cond_;
 

@@ -40,7 +40,14 @@ void VideoProcessing::VideoProcessingFunction(Task* task) {
             frame = self->video_capture_.GetFrame();
         }
 
-        (self->next_buffer_) = self->ProcessVideo(frame);
+        auto start = std::chrono::high_resolution_clock::now();
+        self->next_buffer_ = self->ProcessVideo(frame);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed_ns = static_cast<double>(
+            std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
+                .count());
+        auto elapsed = elapsed_ns * 1.0e-9;
+        self->time_stats_.Push(elapsed);
 
         {
             std::lock_guard<std::mutex> lock(self->mutex_);

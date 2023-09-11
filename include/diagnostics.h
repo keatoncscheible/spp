@@ -12,6 +12,7 @@
 #include <iostream>
 #include <mutex>
 
+#include "statistics.h"
 #include "task.h"
 #include "video_capture.h"
 #include "video_processing.h"
@@ -34,10 +35,14 @@ class Diagnostics {
     void OpenDiagnosticsFile();
     void CloseDiagnosticsFile();
     void RemoveDiagnosticsFolder();
+    void ResetDiagnosticsLog();
+    void UpdateDiagnosticsLog();
+    void UpdateStatistics();
     Task task_;
     VideoCapture& video_capture_;
     VideoProcessing& video_processing_;
     std::ofstream diagnostics_log_;
+    Statistics<double> video_processing_time_stats_{0, 0, 0, 0, 0};
 };
 
 #endif  // DIAGNOSTICS_H

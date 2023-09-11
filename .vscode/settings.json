@@ -70,7 +70,8 @@
         "variant": "cpp",
         "csignal": "cpp",
         "codecvt": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "queue": "cpp"
     },
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "readability-identifier-length",

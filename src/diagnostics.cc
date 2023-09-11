@@ -74,17 +74,40 @@ void Diagnostics::RemoveDiagnosticsFolder() {
     }
 }
 
+void Diagnostics::ResetDiagnosticsLog() { diagnostics_log_.seekp(0); }
+
+void Diagnostics::UpdateDiagnosticsLog() {
+    ResetDiagnosticsLog();
+    UpdateStatistics();
+    constexpr int kPrecision = 2;
+    diagnostics_log_ << "              Average     Minimum     Maximum     "
+                        "Variance    Standard Deviation     \n";
+    diagnostics_log_ << "Processing:   ";
+    diagnostics_log_ << std::scientific << std::setprecision(kPrecision)
+                     << video_processing_time_stats_.average << "    ";
+    diagnostics_log_ << std::scientific << std::setprecision(kPrecision)
+                     << video_processing_time_stats_.minimum << "    ";
+    diagnostics_log_ << std::scientific << std::setprecision(kPrecision)
+                     << video_processing_time_stats_.maximum << "    ";
+    diagnostics_log_ << std::scientific << std::setprecision(kPrecision)
+                     << video_processing_time_stats_.variance << "    ";
+    diagnostics_log_ << std::scientific << std::setprecision(kPrecision)
+                     << video_processing_time_stats_.standard_deviation
+                     << "    ";
+    diagnostics_log_ << "\n";
+}
+
+void Diagnostics::UpdateStatistics() {
+    video_processing_time_stats_ =
+        video_processing_.time_stats_.GetStatistics();
+}
+
 void Diagnostics::DiagnosticsFunction(Task* task) {
     Diagnostics* self = static_cast<Diagnostics*>(task->GetData());
 
-    int iter = 0;
     while (!shutting_down) {
-        iter++;
         std::unique_lock<std::mutex> lock(self->mutex);
         self->cond.wait_for(lock, task->period_ms);
-
-        // Write diagnostics information to the log file
-        self->diagnostics_log_ << "Diagnostics: " << iter << "\n";
-        self->diagnostics_log_.seekp(0);
+        self->UpdateDiagnosticsLog();
     }
 }
