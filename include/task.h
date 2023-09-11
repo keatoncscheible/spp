@@ -7,6 +7,7 @@
 #define TASK_H
 
 #include <chrono>
+#include <functional>
 #include <thread>
 
 // Forward declaration of Task class
@@ -15,7 +16,7 @@ class Task;
 /***********************************************
 Aliases
 ***********************************************/
-using TaskFunction = void (*)(Task*);
+using TaskFunction = std::function<void(Task*)>;
 
 /***********************************************
 Enums
@@ -54,25 +55,17 @@ class Task {
          TaskFunction function);
     std::chrono::milliseconds period_ms;
 
-    void start();
-    void join();
+    void Start();
+    void Join();
+    void* GetData();
+    void SetData(void* data);
 
    private:
     TaskId id_;
     TaskPriority priority_;
     TaskFunction function_;
+    void* data_;
     std::thread thread_;
 };
-
-/***********************************************
-Variables
-***********************************************/
-extern std::array<Task, static_cast<int>(TaskId::COUNT)> tasks;
-
-/***********************************************
-Function Prototypes
-***********************************************/
-void task_init();
-void task_shutdown();
 
 #endif  // TASK_H

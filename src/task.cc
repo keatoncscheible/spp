@@ -12,33 +12,21 @@
 #include <array>
 #include <cstring>
 #include <iostream>
+#include <thread>
 
 #include "diagnostics.h"
 #include "video_capture.h"
 #include "video_process.h"
-
-/***********************************************
-Constants
-***********************************************/
-std::array<Task, static_cast<int>(TaskId::COUNT)> tasks = {{
-    Task(TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE,
-         TaskUpdatePeriodMs::VIDEO_CAPTURE, VideoCaptureTask),
-    Task(TaskId::VIDEO_PROCESS, TaskPriority::VIDEO_PROCESS,
-         TaskUpdatePeriodMs::VIDEO_PROCESS, VideoProcessTask),
-#ifdef DIAGNOSTICS_ENABLED
-    Task(TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS,
-         TaskUpdatePeriodMs::DIAGNOSTICS, DiagnosticsTask),
-#endif
-}};
 
 Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
            TaskFunction function)
     : id_(id),
       priority_(priority),
       period_ms(static_cast<int>(period_ms)),
-      function_(function) {}
+      function_(function),
+      data_(nullptr) {}
 
-void Task::start() {
+void Task::Start() {
     thread_ = std::thread(function_, this);
     sched_param sch_params;
     sch_params.sched_priority = static_cast<int>(priority_);
@@ -49,20 +37,11 @@ void Task::start() {
     }
 }
 
-void Task::join() {
+void Task::Join() {
     if (thread_.joinable()) {
         thread_.join();
     }
 }
 
-void task_init() {
-    for (Task& task : tasks) {
-        task.start();
-    }
-}
-
-void task_shutdown() {
-    for (Task& task : tasks) {
-        task.join();
-    }
-}
+void* Task::GetData() { return data_; }
+void Task::SetData(void* data) { data_ = data; }
