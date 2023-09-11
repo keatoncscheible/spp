@@ -9,8 +9,10 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <condition_variable>
 #include <csignal>
 #include <iostream>
+#include <mutex>
 #include <thread>
 
 #include "diagnostics.h"
@@ -22,12 +24,15 @@
 
 // Used to gracefully shutdown tasks
 std::atomic<bool> shutting_down(false);
+std::condition_variable shutdown_cv;
+std::mutex shutdown_mutex;
 
 // Signal handler function to handle Ctrl+C
 void SignalHandler(int signum) {
     if (signum == SIGINT || signum == SIGTERM) {
         std::cout << "\nClosing Application..." << std::endl;
         shutting_down = true;
+        shutdown_cv.notify_all();
     }
 }
 
@@ -47,9 +52,8 @@ int main(int argc, char *argv[]) {
         diagnostics.Start();
 
         while (!shutting_down) {
-            constexpr int64_t kSleepDuration = 100;
-            std::this_thread::sleep_for(
-                std::chrono::milliseconds(kSleepDuration));
+            std::unique_lock<std::mutex> lock(shutdown_mutex);
+            shutdown_cv.wait(lock);
         }
 
         diagnostics.Join();
