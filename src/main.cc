@@ -36,19 +36,10 @@ std::mutex display_mutex;
 // Signal handler function to handle Ctrl+C
 void SignalHandler(int signum) {
     if (signum == SIGINT || signum == SIGTERM) {
-        std::cout << "\nClosing Application..." << std::endl;
         shutting_down = true;
-
-        std::cout << "Main: Notify shutdown_cv" << std::endl;
         shutdown_cv.notify_all();
-
-        std::cout << "Main: Notify process_cv" << std::endl;
         process_cv.notify_all();
-
-        std::cout << "Main: Notify capture_cv" << std::endl;
         capture_cv.notify_all();
-
-        std::cout << "Main: Notify display_cv" << std::endl;
         display_cv.notify_all();
     }
 }
@@ -73,19 +64,10 @@ int main(int argc, char *argv[]) {
             shutdown_cv.wait(lock);
         }
 
-        std::cout << "Joining Diagnostics" << std::endl;
         diagnostics.Join();
-
-        std::cout << "Joining Video Display" << std::endl;
         video_display.Join();
-
-        std::cout << "Joining Video Processing" << std::endl;
         video_processing.Join();
-
-        std::cout << "Joining Video Capture" << std::endl;
         video_capture.Join();
-
-        std::cout << "Done with joining" << std::endl;
 
     } catch (const VideoCaptureException &vce) {
         std::cerr << "Video Capture Error: " << vce.what() << std::endl;
