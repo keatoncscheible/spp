@@ -12,6 +12,8 @@
 #include "error_handling.h"
 
 extern std::atomic<bool> shutting_down;
+extern std::condition_variable capture_cv;
+extern std::mutex capture_mutex;
 
 VideoCapture::VideoCapture()
     : task_(TaskId::VIDEO_CAPTURE, TaskPriority::VIDEO_CAPTURE,
@@ -52,16 +54,35 @@ void VideoCapture::VideoCaptureFunction(Task* task) {
     VideoCapture* self = static_cast<VideoCapture*>(task->GetData());
 
     while (!shutting_down) {
-        self->capture_ >> (self->next_buffer_);
-
-        if (self->next_buffer_.empty()) {
-            std::cerr << "Failed to capture frame." << std::endl;
+        auto frame_captured = self->CaptureFrame();
+        if (!frame_captured) {
             continue;
         }
-        {
-            std::lock_guard<std::mutex> lock(self->mutex_);
-            std::swap(self->current_buffer_, self->next_buffer_);
-        }
-        self->cond_.notify_one();
+        self->SwapBuffers();
+        self->NotifyListeners();
+        self->ThrottleCapture();
     }
+    self->NotifyListeners();
+}
+
+bool VideoCapture::CaptureFrame() {
+    capture_ >> next_buffer_;
+
+    if (!next_buffer_.empty()) {
+        return true;
+    }
+    std::cerr << "Failed to capture frame." << std::endl;
+    return false;
+}
+
+void VideoCapture::SwapBuffers() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    std::swap(current_buffer_, next_buffer_);
+}
+
+void VideoCapture::NotifyListeners() { cond_.notify_one(); }
+
+void VideoCapture::ThrottleCapture() {
+    std::unique_lock<std::mutex> lock(capture_mutex);
+    capture_cv.wait_for(lock, task_.period_ms);
 }

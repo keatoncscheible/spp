@@ -12,6 +12,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "error_handling.h"
+#include "timing.h"
 #include "video_capture.h"
 
 extern std::atomic<bool> shutting_down;
@@ -34,34 +35,32 @@ void VideoProcessing::VideoProcessingFunction(Task* task) {
 
     cv::Mat frame;
     while (!shutting_down) {
-        {
-            std::unique_lock<std::mutex> lock(self->video_capture_.mutex_);
-            self->video_capture_.cond_.wait(lock);
-            frame = self->video_capture_.GetFrame();
-        }
-
-        auto start = std::chrono::high_resolution_clock::now();
-        self->next_buffer_ = self->ProcessVideo(frame);
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed_ns = static_cast<double>(
-            std::chrono::duration_cast<std::chrono::nanoseconds>(end - start)
-                .count());
-        auto elapsed = elapsed_ns * 1.0e-9;
-        self->time_stats_.Push(elapsed);
-
-        {
-            std::lock_guard<std::mutex> lock(self->mutex_);
-            std::swap(self->current_buffer_, self->next_buffer_);
-        }
-
-        self->cond_.notify_one();
+        self->GetInputFrame(frame);
+        auto processing_time = TimeFunction(
+            [&]() { self->ProcessVideo(frame, self->next_buffer_); });
+        self->time_stats_.Push(processing_time);
+        self->SwapBuffers();
+        self->NotifyListeners();
     }
 }
 
-cv::Mat& VideoProcessing::ProcessVideo(cv::Mat& frame) {
-    if (frame.empty()) {
+void VideoProcessing::GetInputFrame(cv::Mat& frame) {
+    std::unique_lock<std::mutex> lock(video_capture_.mutex_);
+    video_capture_.cond_.wait(lock);
+    frame = video_capture_.GetOutputFrame();
+}
+
+void VideoProcessing::ProcessVideo(cv::Mat& frame_in, cv::Mat& frame_out) {
+    if (frame_in.empty()) {
         std::cerr << "Cannot process empty frame\n";
+        return;
     }
-    cv::cvtColor(frame, frame, cv::COLOR_BGR2HLS);
-    return frame;
+    cv::cvtColor(frame_in, frame_out, cv::COLOR_BGR2HLS);
 }
+
+void VideoProcessing::SwapBuffers() {
+    std::lock_guard<std::mutex> lock(mutex_);
+    std::swap(current_buffer_, next_buffer_);
+}
+
+void VideoProcessing::NotifyListeners() { cond_.notify_one(); }

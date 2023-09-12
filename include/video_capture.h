@@ -18,7 +18,7 @@ class VideoCapture {
     ~VideoCapture();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
-    cv::Mat& GetFrame() { return current_buffer_; }
+    cv::Mat& GetOutputFrame() { return current_buffer_; }
     std::mutex mutex_;
     std::condition_variable cond_;
 
@@ -27,8 +27,11 @@ class VideoCapture {
     cv::VideoCapture capture_;
     void StartCapture();
     void StopCapture();
+    bool CaptureFrame();
+    void SwapBuffers();
+    void NotifyListeners();
+    void ThrottleCapture();
     Task task_;
-
     cv::Mat buffer1_, buffer2_;
     cv::Mat& current_buffer_;
     cv::Mat& next_buffer_;

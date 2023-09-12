@@ -20,14 +20,17 @@ class VideoProcessing {
     ~VideoProcessing();
     void Start() { task_.Start(); }
     void Join() { task_.Join(); }
-    cv::Mat& GetFrame() { return current_buffer_; }
+    cv::Mat& GetOutputFrame() { return current_buffer_; }
     StatisticsQueue<double> time_stats_{100};
     std::mutex mutex_;
     std::condition_variable cond_;
 
    private:
     static void VideoProcessingFunction(Task* task);
-    cv::Mat& ProcessVideo(cv::Mat& frame);
+    void GetInputFrame(cv::Mat& frame);
+    void ProcessVideo(cv::Mat& frame_in, cv::Mat& frame_out);
+    void SwapBuffers();
+    void NotifyListeners();
     Task task_;
     VideoCapture& video_capture_;
     cv::Mat buffer1_, buffer2_;

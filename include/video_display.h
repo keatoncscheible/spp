@@ -21,7 +21,9 @@ class VideoDisplay {
    private:
     const char* kWindowName = "Video";
     static void VideoDisplayFunction(Task* task);
-    void DisplayVideo();
+    void GetInputFrame(cv::Mat& frame);
+    void DisplayVideo(cv::Mat& frame);
+    void ThrottleDisplay();
     Task task_;
     VideoProcessing& video_processing_;
 };
