@@ -27,7 +27,7 @@ class VideoCapture {
     cv::VideoCapture capture_;
     void StartCapture();
     void StopCapture();
-    bool CaptureFrame();
+    bool CaptureFrame(cv::Mat& frame);
     void SwapBuffers();
     void NotifyListeners();
     void ThrottleCapture();

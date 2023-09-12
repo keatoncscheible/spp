@@ -54,8 +54,9 @@ void VideoCapture::VideoCaptureFunction(Task* task) {
     VideoCapture* self = static_cast<VideoCapture*>(task->GetData());
 
     while (!shutting_down) {
-        auto frame_captured = self->CaptureFrame();
+        bool frame_captured = self->CaptureFrame(self->next_buffer_);
         if (!frame_captured) {
+            std::cerr << "Failed to capture frame." << std::endl;
             continue;
         }
         self->SwapBuffers();
@@ -65,15 +66,7 @@ void VideoCapture::VideoCaptureFunction(Task* task) {
     self->NotifyListeners();
 }
 
-bool VideoCapture::CaptureFrame() {
-    capture_ >> next_buffer_;
-
-    if (!next_buffer_.empty()) {
-        return true;
-    }
-    std::cerr << "Failed to capture frame." << std::endl;
-    return false;
-}
+bool VideoCapture::CaptureFrame(cv::Mat& frame) { return capture_.read(frame); }
 
 void VideoCapture::SwapBuffers() {
     std::lock_guard<std::mutex> lock(mutex_);
