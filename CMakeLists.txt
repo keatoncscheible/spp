@@ -16,22 +16,29 @@ find_package(spdlog REQUIRED)
 
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 set(TASK_INCLUDE_DIR "${INCLUDE_DIR}/task")
+set(UI_INCLUDE_DIR "${INCLUDE_DIR}/ui")
 set(UTIL_INCLUDE_DIR "${INCLUDE_DIR}/util")
 set(VIDEO_INCLUDE_DIR "${INCLUDE_DIR}/video")
 set(INCLUDE_DIRS 
     ${INCLUDE_DIR}
     ${TASK_INCLUDE_DIR}
+    ${UI_INCLUDE_DIR}
     ${UTIL_INCLUDE_DIR}
     ${VIDEO_INCLUDE_DIR}
 )
 
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 set(TASK_SOURCE_DIR "${SOURCE_DIR}/task")
+set(UI_SOURCE_DIR "${SOURCE_DIR}/ui")
 set(UTIL_SOURCE_DIR "${SOURCE_DIR}/util")
 set(VIDEO_SOURCE_DIR "${SOURCE_DIR}/video")
 
 set(TASK_SOURCES
     ${TASK_SOURCE_DIR}/task.cc
+)
+
+set(UI_SOURCES
+    ${UI_SOURCE_DIR}/ui.cc
 )
 
 set(UTIL_SOURCES
@@ -53,6 +60,7 @@ set(VIDEO_SOURCES
 set(SOURCES
     ${SOURCE_DIR}/main.cc
     ${TASK_SOURCES}
+    ${UI_SOURCES}
     ${UTIL_SOURCES}
     ${VIDEO_SOURCES} 
 )

@@ -29,6 +29,7 @@ enum class TaskId {
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
 #endif
+    UI,
     COUNT
 };
 
@@ -39,6 +40,7 @@ enum class TaskPriority {
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
 #endif
+    UI,
 };
 
 /***********************************************
