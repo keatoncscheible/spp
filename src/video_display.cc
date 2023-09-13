@@ -1,10 +1,8 @@
 /******************************************************************************
- * Filename:    video_display.cpp
+ * Filename:    VIDEO_OUTPUT.cpp
  * Description: Video display task
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
-
-#include "video_display.h"
 
 #include <atomic>
 #include <chrono>
@@ -12,6 +10,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
+#include "VIDEO_OUTPUT.h"
 #include "video_processing.h"
 
 extern std::atomic<bool> shutting_down;
@@ -20,8 +19,8 @@ extern std::mutex display_mutex;
 
 VideoDisplay::VideoDisplay(VideoProcessing& video_processing)
     : video_processing_(video_processing),
-      task_(TaskId::VIDEO_DISPLAY, TaskPriority::VIDEO_DISPLAY,
-            TaskUpdatePeriodMs::VIDEO_DISPLAY, VideoDisplayFunction) {
+      task_(TaskId::VIDEO_OUTPUT, TaskPriority::VIDEO_OUTPUT,
+            TaskUpdatePeriodMs::VIDEO_OUTPUT, VideoDisplayFunction) {
     task_.SetData(this);
 }
 
@@ -56,5 +55,5 @@ void VideoDisplay::DisplayVideo(cv::Mat& frame) {
 
 void VideoDisplay::ThrottleDisplay() {
     std::unique_lock<std::mutex> lock(display_mutex);
-    display_cv.wait_for(lock, task_.period_ms);
+    display_cv.wait_for(lock, task_.period_ms_);
 }

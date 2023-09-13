@@ -107,7 +107,7 @@ void Diagnostics::DiagnosticsFunction(Task* task) {
 
     while (!shutting_down) {
         std::unique_lock<std::mutex> lock(self->mutex);
-        self->cond.wait_for(lock, task->period_ms);
+        self->cond.wait_for(lock, task->period_ms_);
         self->UpdateDiagnosticsLog();
     }
 }

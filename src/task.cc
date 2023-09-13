@@ -22,7 +22,7 @@ Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
            TaskFunction function)
     : id_(id),
       priority_(priority),
-      period_ms(static_cast<int>(period_ms)),
+      period_ms_(period_ms),
       function_(function),
       data_(nullptr) {}
 

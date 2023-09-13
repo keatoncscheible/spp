@@ -77,5 +77,5 @@ void VideoCapture::NotifyListeners() { cond_.notify_one(); }
 
 void VideoCapture::ThrottleCapture() {
     std::unique_lock<std::mutex> lock(capture_mutex);
-    capture_cv.wait_for(lock, task_.period_ms);
+    capture_cv.wait_for(lock, task_.period_ms_);
 }

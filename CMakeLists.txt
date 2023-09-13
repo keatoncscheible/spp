@@ -19,7 +19,7 @@ set(SOURCES
     ${SOURCE_DIR}/main.cc
     # ${SOURCE_DIR}/diagnostics.cc
     # ${SOURCE_DIR}/video_capture.cc
-    # ${SOURCE_DIR}/video_display.cc
+    # ${SOURCE_DIR}/VIDEO_OUTPUT.cc
     # ${SOURCE_DIR}/video_processing.cc
     ${SOURCE_DIR}/video_output.cc
     ${SOURCE_DIR}/video_processor.cc

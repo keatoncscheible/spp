@@ -18,7 +18,6 @@ class VideoProcessor : public VideoTask {
     VideoProcessor(VideoTask& input,
                    std::shared_ptr<VideoTransformerFactory> transformer_factory,
                    TaskId id, TaskPriority priority,
-                   TaskUpdatePeriodMs update_period,
                    std::atomic<bool>& shutting_down);
     ~VideoProcessor();
     void ChangeTransformer(

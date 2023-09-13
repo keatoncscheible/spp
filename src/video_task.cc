@@ -34,5 +34,5 @@ void VideoTask::NotifyListeners() { cond_.notify_one(); }
 
 void VideoTask::Throttle() {
     std::unique_lock<std::mutex> lock(mutex_);
-    cond_.wait_for(lock, task_.period_ms);
+    cond_.wait_for(lock, task_.period_ms_);
 }

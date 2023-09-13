@@ -43,8 +43,6 @@ int main(int argc, char *argv[]) {
     std::signal(SIGINT, SignalHandler);
 
     try {
-        // Create a VideoInput instance with an initial video source (e.g.,
-        // Webcam)
         std::shared_ptr<VideoSourceFactory> video_source_factory =
             std::make_shared<WebcamFactory>();
 
@@ -56,19 +54,17 @@ int main(int argc, char *argv[]) {
 
         VideoInput video_input(video_source_factory, TaskId::VIDEO_INPUT,
                                TaskPriority::VIDEO_INPUT,
-                               TaskUpdatePeriodMs::VIDEO_INPUT, shutting_down);
+                               TaskUpdatePeriodMs(100), shutting_down);
 
         VideoProcessor video_processor(
             video_input, video_transformer_factory, TaskId::VIDEO_PROCESSING,
-            TaskPriority::VIDEO_PROCESSING,
-            TaskUpdatePeriodMs::VIDEO_PROCESSING, shutting_down);
+            TaskPriority::VIDEO_PROCESSING, shutting_down);
 
         VideoOutput video_output(
-            video_processor, video_consumer_factory, TaskId::VIDEO_DISPLAY,
-            TaskPriority::VIDEO_DISPLAY, TaskUpdatePeriodMs::VIDEO_DISPLAY,
-            shutting_down);
+            video_processor, video_consumer_factory, TaskId::VIDEO_OUTPUT,
+            TaskPriority::VIDEO_OUTPUT, TaskUpdatePeriodMs(100), shutting_down);
 
-          video_input.Init();
+        video_input.Init();
         video_processor.Init();
         video_output.Init();
 

@@ -1,10 +1,10 @@
 /******************************************************************************
- * Filename:    video_display.h
+ * Filename:    VIDEO_OUTPUT.h
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
-#ifndef VIDEO_DISPLAY_H
-#define VIDEO_DISPLAY_H
+#ifndef VIDEO_OUTPUT_H
+#define VIDEO_OUTPUT_H
 
 #include <opencv2/opencv.hpp>
 
@@ -28,4 +28,4 @@ class VideoDisplay {
     VideoProcessing& video_processing_;
 };
 
-#endif  // VIDEO_DISPLAY_H
+#endif  // VIDEO_OUTPUT_H

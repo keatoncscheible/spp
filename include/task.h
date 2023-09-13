@@ -17,6 +17,7 @@ class Task;
 Aliases
 ***********************************************/
 using TaskFunction = std::function<void(Task*)>;
+using TaskUpdatePeriodMs = std::chrono::milliseconds;
 
 /***********************************************
 Enums
@@ -24,7 +25,7 @@ Enums
 enum class TaskId {
     VIDEO_INPUT,
     VIDEO_PROCESSING,
-    VIDEO_DISPLAY,
+    VIDEO_OUTPUT,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
 #endif
@@ -34,18 +35,9 @@ enum class TaskId {
 enum class TaskPriority {
     VIDEO_INPUT = 1,
     VIDEO_PROCESSING,
-    VIDEO_DISPLAY,
+    VIDEO_OUTPUT,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
-#endif
-};
-
-enum class TaskUpdatePeriodMs {
-    VIDEO_INPUT = 100,
-    VIDEO_PROCESSING = 0,
-    VIDEO_DISPLAY = 33,
-#ifdef DIAGNOSTICS_ENABLED
-    DIAGNOSTICS = 1000,
 #endif
 };
 
@@ -56,12 +48,11 @@ class Task {
    public:
     Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
          TaskFunction function);
-    std::chrono::milliseconds period_ms;
-
     void Start();
     void Join();
     void* GetData();
     void SetData(void* data);
+    TaskUpdatePeriodMs period_ms_;
 
    private:
     TaskId id_;

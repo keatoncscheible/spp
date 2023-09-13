@@ -16,9 +16,8 @@
 VideoProcessor::VideoProcessor(
     VideoTask& input,
     std::shared_ptr<VideoTransformerFactory> transformer_factory, TaskId id,
-    TaskPriority priority, TaskUpdatePeriodMs update_period,
-    std::atomic<bool>& shutting_down)
-    : VideoTask(id, priority, update_period, TaskFcn, shutting_down),
+    TaskPriority priority, std::atomic<bool>& shutting_down)
+    : VideoTask(id, priority, TaskUpdatePeriodMs(0), TaskFcn, shutting_down),
       input_(input),
       transformer_factory_(transformer_factory) {
     transformer_ = transformer_factory_->Create();
