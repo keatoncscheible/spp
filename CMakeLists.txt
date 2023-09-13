@@ -16,20 +16,17 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Add your source files here
 set(SOURCES
-    ${SOURCE_DIR}/main.cc
     # ${SOURCE_DIR}/diagnostics.cc
-    # ${SOURCE_DIR}/video_capture.cc
-    # ${SOURCE_DIR}/VIDEO_OUTPUT.cc
-    # ${SOURCE_DIR}/video_processing.cc
-    ${SOURCE_DIR}/video_output.cc
-    ${SOURCE_DIR}/video_processor.cc
+    ${SOURCE_DIR}/grayscale_transformer.cc
+    ${SOURCE_DIR}/main.cc
     ${SOURCE_DIR}/task.cc
     ${SOURCE_DIR}/video_file.cc
     ${SOURCE_DIR}/video_input.cc
-    ${SOURCE_DIR}/webcam.cc
-    ${SOURCE_DIR}/grayscale_transformer.cc
+    ${SOURCE_DIR}/video_output.cc
     ${SOURCE_DIR}/video_player.cc
+    ${SOURCE_DIR}/video_processor.cc        
     ${SOURCE_DIR}/video_task.cc
+    ${SOURCE_DIR}/webcam.cc
 )
 
 add_executable(image_processing_learning_app ${SOURCES})

@@ -14,10 +14,6 @@
 #include <iostream>
 #include <thread>
 
-#include "diagnostics.h"
-#include "video_capture.h"
-#include "video_processing.h"
-
 Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
            TaskFunction function)
     : id_(id),
