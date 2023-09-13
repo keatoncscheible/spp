@@ -9,13 +9,9 @@
 #include <memory>
 
 #include "opencv2/core.hpp"
-#include "video_source.h"
 
-class VideoTransformer : public VideoSource {
+class VideoTransformer {
    public:
-    void Open() override{};
-    void Close() override{};
-    void ReadFrame(cv::Mat& frame) override{};
     virtual void Transform(cv::Mat& frame) = 0;
 };
 

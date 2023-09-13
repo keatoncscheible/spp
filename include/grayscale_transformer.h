@@ -11,8 +11,6 @@
 
 class GrayscaleTransformer : public VideoTransformer {
    public:
-    void Open();
-    void Close();
     void ReadFrame(cv::Mat& frame);
     void Transform(cv::Mat& frame) override;
 };

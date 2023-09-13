@@ -12,9 +12,9 @@
 
 class VideoSource {
    public:
+    virtual void ReadFrame(cv::Mat& frame) = 0;
     virtual void Open() = 0;
     virtual void Close() = 0;
-    virtual void ReadFrame(cv::Mat& frame) = 0;
 };
 
 class VideoSourceFactory {
