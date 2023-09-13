@@ -32,7 +32,4 @@ void Webcam::Close() {
     }
 }
 
-void Webcam::ReadFrame(cv::Mat& frame) {
-    std::cout << "Reading webcam frame" << std::endl;
-    capture_.read(frame);
-}
+void Webcam::ReadFrame(cv::Mat& frame) { capture_.read(frame); }
