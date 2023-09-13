@@ -47,6 +47,7 @@ set(UTIL_SOURCES
 )
 
 set(VIDEO_SOURCES
+    ${VIDEO_SOURCE_DIR}/bypass_transformer.cc
     ${VIDEO_SOURCE_DIR}/grayscale_transformer.cc
     ${VIDEO_SOURCE_DIR}/hsv_transformer.cc
     ${VIDEO_SOURCE_DIR}/video_file.cc

@@ -12,6 +12,7 @@
 #include <mutex>
 #include <string>
 
+#include "bypass_transformer.h"
 #include "grayscale_transformer.h"
 #include "hsv_transformer.h"
 #include "logger.h"
@@ -31,6 +32,7 @@ App::App(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
       webcam_factory_(std::make_shared<WebcamFactory>()),
       video_file_factory_(std::make_shared<VideoFileFactory>(
           "~/projects/spp/assets/videos/test.mp4")),
+      bypass_transformer_factory_(std::make_shared<BypassTransformerFactory>()),
       grayscale_transformer_factory_(
           std::make_shared<GrayscaleTransformerFactory>()),
       hsv_transformer_factory_(std::make_shared<HsvTransformerFactory>()),
@@ -39,7 +41,7 @@ App::App(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
       video_input_(webcam_factory_, TaskId::VIDEO_INPUT,
                    TaskPriority::VIDEO_INPUT, TaskUpdatePeriodMs(33),
                    shutting_down),
-      video_processor_(video_input_, grayscale_transformer_factory_,
+      video_processor_(video_input_, bypass_transformer_factory_,
                        TaskId::VIDEO_PROCESSING, TaskPriority::VIDEO_PROCESSING,
                        shutting_down),
       video_output_(video_processor_, video_player_factory_,
@@ -93,9 +95,11 @@ void App::ProcessInput(std::string& input) {
         //     SetSourceWebcam();
         // } else if (input == "source file") {
         //     SetSourceVideoFile();
-    } else if (input == "transformer gray") {
+    } else if (input == "transform bypass") {
+        SetTransformerBypass();
+    } else if (input == "transform gray") {
         SetTransformerGray();
-    } else if (input == "transformer hsv") {
+    } else if (input == "transform hsv") {
         SetTransformerHsv();
     } else {
         spdlog::warn(
@@ -122,9 +126,10 @@ void App::Help() {
         "  ('stop')                : Stop sensory processing pipeline");
     // spdlog::info("  ('source webcam')       : Set video source to webcame");
     // spdlog::info("  ('source file')         : Set video source to file");
+    spdlog::info("  ('transform bypass')    : Bypass the video transformer");
     spdlog::info(
-        "  ('transformer gray')    : Set video transformer to grayscale");
-    spdlog::info("  ('transformer hsv')     : Set video transformer to hsv");
+        "  ('transform gray')      : Set video transformer to grayscale");
+    spdlog::info("  ('transform hsv')       : Set video transformer to hsv");
 }
 
 void App::Start() {
@@ -149,6 +154,10 @@ void App::SetSourceWebcam() { video_input_.ChangeSource(webcam_factory_); }
 
 void App::SetSourceVideoFile() {
     video_input_.ChangeSource(video_file_factory_);
+}
+
+void App::SetTransformerBypass() {
+    video_processor_.ChangeTransformer(bypass_transformer_factory_);
 }
 
 void App::SetTransformerGray() {

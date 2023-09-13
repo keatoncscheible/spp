@@ -40,6 +40,7 @@ class App {
     void Stop();
     void SetSourceWebcam();
     void SetSourceVideoFile();
+    void SetTransformerBypass();
     void SetTransformerGray();
     void SetTransformerHsv();
     void Quit();
@@ -48,6 +49,7 @@ class App {
     std::condition_variable& shutdown_cv_;
     std::shared_ptr<VideoSourceFactory> webcam_factory_;
     std::shared_ptr<VideoSourceFactory> video_file_factory_;
+    std::shared_ptr<VideoTransformerFactory> bypass_transformer_factory_;
     std::shared_ptr<VideoTransformerFactory> grayscale_transformer_factory_;
     std::shared_ptr<VideoTransformerFactory> hsv_transformer_factory_;
     std::shared_ptr<VideoConsumerFactory> video_player_factory_;
