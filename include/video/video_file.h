@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include "opencv2/core.hpp"
+#include "opencv2/opencv.hpp"
 #include "video_source.h"
 
 class VideoFile : public VideoSource {
@@ -20,6 +20,7 @@ class VideoFile : public VideoSource {
 
    private:
     std::string filename_;
+    cv::VideoCapture capture_;
 };
 
 class VideoFileFactory : public VideoSourceFactory {

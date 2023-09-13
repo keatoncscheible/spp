@@ -21,6 +21,8 @@ class VideoOutput : public VideoTask {
                 TaskUpdatePeriodMs update_period,
                 std::atomic<bool>& shutting_down);
     ~VideoOutput();
+    void Start();
+    void Stop();
     void ChangeConsumer(
         std::shared_ptr<VideoConsumerFactory> new_consumer_factory);
 
@@ -31,6 +33,7 @@ class VideoOutput : public VideoTask {
     VideoTask& input_;
     std::shared_ptr<VideoConsumerFactory> consumer_factory_;
     std::shared_ptr<VideoConsumer> consumer_;
+    bool running_;
 };
 
 #endif  // VIDEO_OUTPUT_H

@@ -20,6 +20,8 @@ class VideoProcessor : public VideoTask {
                    TaskId id, TaskPriority priority,
                    std::atomic<bool>& shutting_down);
     ~VideoProcessor();
+    void Start();
+    void Stop();
     void ChangeTransformer(
         std::shared_ptr<VideoTransformerFactory> new_transformer_factory);
 
@@ -30,6 +32,7 @@ class VideoProcessor : public VideoTask {
     VideoTask& input_;
     std::shared_ptr<VideoTransformerFactory> transformer_factory_;
     std::shared_ptr<VideoTransformer> transformer_;
+    bool running_;
 };
 
 #endif  // VIDEO_PROCESSOR_H

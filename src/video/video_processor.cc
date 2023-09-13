@@ -20,12 +20,17 @@ VideoProcessor::VideoProcessor(
     TaskPriority priority, std::atomic<bool>& shutting_down)
     : VideoTask(id, priority, TaskUpdatePeriodMs(0), TaskFcn, shutting_down),
       input_(input),
-      transformer_factory_(transformer_factory) {
+      transformer_factory_(transformer_factory),
+      running_(false) {
     transformer_ = transformer_factory_->Create();
     task_.SetData(this);
 }
 
 VideoProcessor::~VideoProcessor() {}
+
+void VideoProcessor::Start() { running_ = true; }
+
+void VideoProcessor::Stop() { running_ = false; }
 
 void VideoProcessor::ChangeTransformer(
     std::shared_ptr<VideoTransformerFactory> new_transformer_factory) {
@@ -47,14 +52,16 @@ void VideoProcessor::TaskFcn(Task* task) {
     VideoProcessor* self = static_cast<VideoProcessor*>(task->GetData());
 
     while (!self->shutting_down_) {
-        cv::Mat& frame = self->next_buffer_;
-        self->GetInputFrame(frame);
-        if (!frame.empty()) {
-            self->ProcessFrame(frame);
-            self->SwapBuffers();
-            self->NotifyListeners();
-        } else {
-            spdlog::error("Processor received an empty frame.");
+        if (self->running_) {
+            cv::Mat& frame = self->next_buffer_;
+            self->GetInputFrame(frame);
+            if (!frame.empty()) {
+                self->ProcessFrame(frame);
+                self->SwapBuffers();
+                self->NotifyListeners();
+            } else {
+                spdlog::error("Processor received an empty frame.");
+            }
         }
     }
     self->NotifyListeners();

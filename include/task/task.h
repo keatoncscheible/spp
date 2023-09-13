@@ -23,24 +23,25 @@ using TaskUpdatePeriodMs = std::chrono::milliseconds;
 Enums
 ***********************************************/
 enum class TaskId {
+    APP,
     VIDEO_INPUT,
     VIDEO_PROCESSING,
     VIDEO_OUTPUT,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
 #endif
-    UI,
     COUNT
 };
 
 enum class TaskPriority {
-    VIDEO_INPUT = 1,
+    APP = 1,
+    VIDEO_INPUT,
     VIDEO_PROCESSING,
     VIDEO_OUTPUT,
 #ifdef DIAGNOSTICS_ENABLED
     DIAGNOSTICS,
 #endif
-    UI,
+    
 };
 
 /***********************************************

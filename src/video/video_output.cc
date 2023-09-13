@@ -21,12 +21,17 @@ VideoOutput::VideoOutput(VideoTask& input,
                          std::atomic<bool>& shutting_down)
     : VideoTask(id, priority, update_period, TaskFcn, shutting_down),
       input_(input),
-      consumer_factory_(consumer_factory) {
+      consumer_factory_(consumer_factory),
+      running_(false) {
     consumer_ = consumer_factory_->Create();
     task_.SetData(this);
 }
 
 VideoOutput::~VideoOutput() {}
+
+void VideoOutput::Start() { running_ = true; }
+
+void VideoOutput::Stop() { running_ = false; }
 
 void VideoOutput::ChangeConsumer(
     std::shared_ptr<VideoConsumerFactory> new_consumer_factory) {
@@ -47,11 +52,13 @@ void VideoOutput::TaskFcn(Task* task) {
 
     cv::Mat frame;
     while (!self->shutting_down_) {
-        self->GetInputFrame(frame);
-        if (!frame.empty()) {
-            self->OutputFrame(frame);
-        } else {
-            spdlog::error("Output received an empty frame.");
+        if (self->running_) {
+            self->GetInputFrame(frame);
+            if (!frame.empty()) {
+                self->OutputFrame(frame);
+            } else {
+                spdlog::error("Output received an empty frame.");
+            }
         }
     }
 }

@@ -30,6 +30,7 @@ class VideoInput : public VideoTask {
     static void TaskFcn(Task* task);
     std::shared_ptr<VideoSourceFactory> source_factory_;
     std::shared_ptr<VideoSource> source_;
+    bool running_;
 };
 
 #endif  // VIDEO_INPUT_H

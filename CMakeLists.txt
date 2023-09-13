@@ -15,30 +15,30 @@ set(spdlog_DIR "/usr/local/src/spdlog/build")  # Replace with the actual path to
 find_package(spdlog REQUIRED)
 
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
+set(APP_INCLUDE_DIR "${INCLUDE_DIR}/app")
 set(TASK_INCLUDE_DIR "${INCLUDE_DIR}/task")
-set(UI_INCLUDE_DIR "${INCLUDE_DIR}/ui")
 set(UTIL_INCLUDE_DIR "${INCLUDE_DIR}/util")
 set(VIDEO_INCLUDE_DIR "${INCLUDE_DIR}/video")
 set(INCLUDE_DIRS 
     ${INCLUDE_DIR}
+    ${APP_INCLUDE_DIR}
     ${TASK_INCLUDE_DIR}
-    ${UI_INCLUDE_DIR}
     ${UTIL_INCLUDE_DIR}
     ${VIDEO_INCLUDE_DIR}
 )
 
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+set(APP_SOURCE_DIR "${SOURCE_DIR}/app")
 set(TASK_SOURCE_DIR "${SOURCE_DIR}/task")
-set(UI_SOURCE_DIR "${SOURCE_DIR}/ui")
 set(UTIL_SOURCE_DIR "${SOURCE_DIR}/util")
 set(VIDEO_SOURCE_DIR "${SOURCE_DIR}/video")
 
-set(TASK_SOURCES
-    ${TASK_SOURCE_DIR}/task.cc
+set(APP_SOURCES
+    ${APP_SOURCE_DIR}/app.cc
 )
 
-set(UI_SOURCES
-    ${UI_SOURCE_DIR}/ui.cc
+set(TASK_SOURCES
+    ${TASK_SOURCE_DIR}/task.cc
 )
 
 set(UTIL_SOURCES
@@ -48,6 +48,7 @@ set(UTIL_SOURCES
 
 set(VIDEO_SOURCES
     ${VIDEO_SOURCE_DIR}/grayscale_transformer.cc
+    ${VIDEO_SOURCE_DIR}/hsv_transformer.cc
     ${VIDEO_SOURCE_DIR}/video_file.cc
     ${VIDEO_SOURCE_DIR}/video_input.cc
     ${VIDEO_SOURCE_DIR}/video_output.cc
@@ -59,8 +60,8 @@ set(VIDEO_SOURCES
 
 set(SOURCES
     ${SOURCE_DIR}/main.cc
+    ${APP_SOURCES}
     ${TASK_SOURCES}
-    ${UI_SOURCES}
     ${UTIL_SOURCES}
     ${VIDEO_SOURCES} 
 )
