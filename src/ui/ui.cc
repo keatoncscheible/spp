@@ -24,6 +24,8 @@ Ui::~Ui() {}
 void Ui::TaskFcn(Task* task) {
     Ui* self = static_cast<Ui*>(task->GetData());
     std::string command;
+
+    self->Help();
     while (!self->shutting_down_) {
         self->GetInput(command);
         self->ProcessInput(command);
