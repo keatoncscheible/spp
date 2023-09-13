@@ -7,7 +7,7 @@
 
 #include <atomic>
 #include <condition_variable>
-#include <future>
+#include <fstream>
 #include <iostream>
 #include <mutex>
 #include <string>
@@ -100,6 +100,8 @@ void App::ProcessInput(std::string& input) {
         //     SetSourceWebcam();
         // } else if (input == "source file") {
         //     SetSourceVideoFile();
+    } else if (input == "stats") {
+        PrintStats();
     } else if (input == "transform bypass") {
         SetTransformerBypass();
     } else if (input == "transform gray") {
@@ -129,6 +131,9 @@ void App::Help() {
         "  ('pause')               : Pause the sensory processing pipeline");
     spdlog::info(
         "  ('stop')                : Stop sensory processing pipeline");
+    spdlog::info(
+        "  ('stats')               : Print out statistics for the sensory "
+        "processing pipeline");
     // spdlog::info("  ('source webcam')       : Set video source to webcame");
     // spdlog::info("  ('source file')         : Set video source to file");
     spdlog::info("  ('transform bypass')    : Bypass the video transformer");
@@ -153,6 +158,27 @@ void App::Stop() {
     video_output_.Stop();
     video_processor_.Stop();
     video_input_.Stop();
+}
+
+void App::PrintStats() {
+    std::string diagnostics_file = "diagnostics/diagnostics_out.txt";
+
+    // Open the file
+    std::ifstream file(diagnostics_file);
+
+    // Check if the file is open
+    if (!file.is_open()) {
+        spdlog::error("Failed to open file: {}", diagnostics_file);
+    }
+
+    // Read and log each line of the file
+    std::string line;
+    while (std::getline(file, line)) {
+        spdlog::info(line);
+    }
+
+    // Close the file
+    file.close();
 }
 
 void App::SetSourceWebcam() { video_input_.ChangeSource(webcam_factory_); }

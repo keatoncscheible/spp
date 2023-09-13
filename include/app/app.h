@@ -39,6 +39,7 @@ class App {
     void Start();
     void Pause();
     void Stop();
+    void PrintStats();
     void SetSourceWebcam();
     void SetSourceVideoFile();
     void SetTransformerBypass();
