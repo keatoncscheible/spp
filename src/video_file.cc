@@ -7,19 +7,20 @@
 
 #include <iostream>
 
+#include "logger.h"
 #include "opencv2/core.hpp"
 
 void VideoFile::Open() {
-    std::cout << "Opening Video File: " << filename_ << std::endl;
+    spdlog::info("Opening Video File: {}", filename_);
     // Implement the logic to open a video file
 }
 
 void VideoFile::Close() {
-    std::cout << "Closing Video File: " << filename_ << std::endl;
+    spdlog::info("Closing Video File: {}", filename_);
     // Implement the logic to close a video file
 }
 
 void VideoFile::ReadFrame(cv::Mat& frame) {
-    std::cout << "Reading frame from Video File: " << filename_ << std::endl;
+    spdlog::info("Reading frame from Video File: {}", filename_);
     // Implement the logic to read a frame from the video file
 }

@@ -71,7 +71,8 @@
         "csignal": "cpp",
         "codecvt": "cpp",
         "filesystem": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "charconv": "cpp"
     },
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "readability-identifier-length",

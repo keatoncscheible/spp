@@ -14,6 +14,8 @@
 #include <iostream>
 #include <thread>
 
+#include "logger.h"
+
 Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
            TaskFunction function)
     : id_(id),
@@ -28,8 +30,7 @@ void Task::Start() {
     sch_params.sched_priority = static_cast<int>(priority_);
     if (pthread_setschedparam(thread_.native_handle(), SCHED_FIFO,
                               &sch_params) != 0) {
-        std::cerr << "Failed to set thread priority: " << strerror(errno)
-                  << std::endl;
+        spdlog::error("Failed to set thread priority: {}", strerror(errno));
     }
 }
 

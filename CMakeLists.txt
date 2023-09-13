@@ -9,15 +9,19 @@ set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 
 # Set the path to OpenCVConfig.cmake
 set(OpenCV_DIR "/usr/local/src/opencv/build")
-
 find_package(OpenCV REQUIRED)
 message(STATUS "Found OpenCV version: ${OpenCV_VERSION}")
 include_directories(${OpenCV_INCLUDE_DIRS})
+
+# Find the spdlog package (you can customize this if needed)
+set(spdlog_DIR "/usr/local/src/spdlog/build")  # Replace with the actual path to your spdlog cmake directory
+find_package(spdlog REQUIRED)
 
 # Add your source files here
 set(SOURCES
     # ${SOURCE_DIR}/diagnostics.cc
     ${SOURCE_DIR}/grayscale_transformer.cc
+    ${SOURCE_DIR}/logger.cc
     ${SOURCE_DIR}/main.cc
     ${SOURCE_DIR}/task.cc
     ${SOURCE_DIR}/video_file.cc
@@ -32,4 +36,4 @@ set(SOURCES
 add_executable(image_processing_learning_app ${SOURCES})
 target_compile_definitions(image_processing_learning_app PRIVATE DIAGNOSTICS_ENABLED)
 target_include_directories(image_processing_learning_app PRIVATE ${INCLUDE_DIR})
-target_link_libraries(image_processing_learning_app PRIVATE ${OpenCV_LIBS})
+target_link_libraries(image_processing_learning_app PRIVATE ${OpenCV_LIBS} spdlog::spdlog)

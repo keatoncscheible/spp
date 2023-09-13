@@ -5,30 +5,29 @@
 
 #include "webcam.h"
 
+#include "logger.h"
 #include "opencv2/core.hpp"
 
 void Webcam::Open() {
-    std::cout << "Opening webcam" << std::endl;
+    spdlog::debug("Opening webcam");
     if (capture_.isOpened()) {
-        std::cout << "Webcam already opened" << std::endl;
+        spdlog::warn("Webcam already opened");
         return;
     }
     capture_.open(0);
     if (!capture_.isOpened()) {
-        std::cerr << "Problem opening webcam" << std::endl;
+        spdlog::error("Problem opening webcam");
     }
 }
 
 void Webcam::Close() {
-    std::cout << "Closing webcam" << std::endl;
+    spdlog::debug("Closing webcam");
     try {
         if (capture_.isOpened()) {
             capture_.release();
         }
     } catch (const std::exception& e) {
-        std::string error_message =
-            "Error stopping video capture: " + std::string(e.what());
-        std::cerr << error_message << std::endl;
+        spdlog::error("Error stopping video capture: {}", e.what());
     }
 }
 

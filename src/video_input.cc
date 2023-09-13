@@ -9,6 +9,7 @@
 #include <iostream>
 #include <mutex>
 
+#include "logger.h"
 #include "opencv2/core.hpp"
 #include "task.h"
 #include "video_task.h"
@@ -59,7 +60,7 @@ void VideoInput::TaskFcn(Task* task) {
             self->SwapBuffers();
             self->NotifyListeners();
         } else {
-            std::cerr << "input frame is empty" << std::endl;
+            spdlog::error("Input received an empty frame.");
         }
 
         self->Throttle();

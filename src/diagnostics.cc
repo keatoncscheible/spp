@@ -17,6 +17,7 @@
 #include <mutex>
 
 #include "error_handling.h"
+#include "logger.h"
 #include "video_capture.h"
 #include "video_processing.h"
 
@@ -38,7 +39,7 @@ Diagnostics::Diagnostics(VideoCapture& video_capture,
 Diagnostics::~Diagnostics() {
     CloseDiagnosticsFile();
     RemoveDiagnosticsFolder();
-    std::cout << "Shutting down diagnostics\n";
+    spdlog::info("Shutting down diagnostics")
 }
 
 void Diagnostics::CreateDiagnosticsFolder() {

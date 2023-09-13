@@ -6,6 +6,7 @@
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
+#include <logger.h>
 #include <unistd.h>
 
 #include <atomic>
@@ -30,6 +31,9 @@
 
 // Used to gracefully shutdown tasks
 std::atomic<bool> shutting_down(false);
+
+// Initialize the logger
+Logger &logger = Logger::instance();
 
 // Signal handler function to handle Ctrl+C
 void SignalHandler(int signum) {
@@ -72,8 +76,9 @@ int main(int argc, char *argv[]) {
         // Webcam, '2' for VideoFile)
         char choice;
         while (true) {
-            std::cout
-                << "Press '1' for Webcam, '2' for VideoFile, or 'q' to quit: ";
+            spdlog::info(
+                "Press '1' for Webcam, '2' for VideoFile, or 'q' to quit: ");
+
             std::cin >> choice;
 
             if (choice == '1') {
@@ -90,7 +95,7 @@ int main(int argc, char *argv[]) {
                 // Quit the program
                 break;
             } else {
-                std::cout << "Invalid choice. Please try again." << std::endl;
+                spdlog::warn("Invalid choice. Please try again.");
             }
         }
 
@@ -100,7 +105,7 @@ int main(int argc, char *argv[]) {
         video_input.Shutdown();
 
     } catch (const std::exception &e) {
-        std::cerr << "An error occurred: " << e.what() << std::endl;
+        spdlog::error("An error occurred: {}", e.what());
         return 1;
     }
 

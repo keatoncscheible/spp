@@ -9,6 +9,7 @@
 #include <iostream>
 #include <mutex>
 
+#include "logger.h"
 #include "opencv2/core.hpp"
 #include "task.h"
 #include "video_task.h"
@@ -48,12 +49,12 @@ void VideoProcessor::TaskFcn(Task* task) {
     while (!self->shutting_down_) {
         cv::Mat& frame = self->next_buffer_;
         self->GetInputFrame(frame);
-        self->ProcessFrame(frame);
         if (!frame.empty()) {
+            self->ProcessFrame(frame);
             self->SwapBuffers();
             self->NotifyListeners();
         } else {
-            std::cerr << "Processor read an empty frame." << std::endl;
+            spdlog::error("Processor received an empty frame.");
         }
     }
     self->NotifyListeners();

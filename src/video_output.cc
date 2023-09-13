@@ -9,6 +9,7 @@
 #include <iostream>
 #include <mutex>
 
+#include "logger.h"
 #include "opencv2/core.hpp"
 #include "task.h"
 #include "video_task.h"
@@ -50,7 +51,7 @@ void VideoOutput::TaskFcn(Task* task) {
         if (!frame.empty()) {
             self->OutputFrame(frame);
         } else {
-            std::cerr << "Output read an empty frame." << std::endl;
+            spdlog::error("Output received an empty frame.");
         }
     }
 }
