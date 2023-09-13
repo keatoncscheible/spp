@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(image_processing_learning)
+project(spp)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_COMPILER /usr/bin/g++)
@@ -65,7 +65,7 @@ set(SOURCES
     ${VIDEO_SOURCES} 
 )
 
-add_executable(image_processing_learning_app ${SOURCES})
-target_compile_definitions(image_processing_learning_app PRIVATE DIAGNOSTICS_ENABLED)
-target_include_directories(image_processing_learning_app PRIVATE ${INCLUDE_DIRS})
-target_link_libraries(image_processing_learning_app PRIVATE ${OpenCV_LIBS} spdlog::spdlog)
+add_executable(spp_app ${SOURCES})
+target_compile_definitions(spp_app PRIVATE DIAGNOSTICS_ENABLED)
+target_include_directories(spp_app PRIVATE ${INCLUDE_DIRS})
+target_link_libraries(spp_app PRIVATE ${OpenCV_LIBS} spdlog::spdlog)
