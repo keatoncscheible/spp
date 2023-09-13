@@ -84,9 +84,10 @@ void Diagnostics::UpdateDiagnosticsLog() {
     ResetDiagnosticsLog();
     UpdateStatistics();
     constexpr int kPrecision = 2;
-    diagnostics_log_ << "              Average     Minimum     Maximum     "
-                        "Variance    Standard Deviation     \n";
-    diagnostics_log_ << "Processing:   ";
+    diagnostics_log_
+        << "                   Average     Minimum     Maximum     "
+           "Variance    Standard Deviation     \n";
+    diagnostics_log_ << "Processing Time:   ";
     diagnostics_log_ << std::scientific << std::setprecision(kPrecision)
                      << video_processing_time_stats_.average << "    ";
     diagnostics_log_ << std::scientific << std::setprecision(kPrecision)
