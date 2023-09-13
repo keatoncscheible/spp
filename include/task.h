@@ -22,7 +22,7 @@ using TaskFunction = std::function<void(Task*)>;
 Enums
 ***********************************************/
 enum class TaskId {
-    VIDEO_CAPTURE,
+    VIDEO_INPUT,
     VIDEO_PROCESSING,
     VIDEO_DISPLAY,
 #ifdef DIAGNOSTICS_ENABLED
@@ -32,7 +32,7 @@ enum class TaskId {
 };
 
 enum class TaskPriority {
-    VIDEO_CAPTURE = 1,
+    VIDEO_INPUT = 1,
     VIDEO_PROCESSING,
     VIDEO_DISPLAY,
 #ifdef DIAGNOSTICS_ENABLED
@@ -41,7 +41,7 @@ enum class TaskPriority {
 };
 
 enum class TaskUpdatePeriodMs {
-    VIDEO_CAPTURE = 100,
+    VIDEO_INPUT = 100,
     VIDEO_PROCESSING = 0,
     VIDEO_DISPLAY = 33,
 #ifdef DIAGNOSTICS_ENABLED
