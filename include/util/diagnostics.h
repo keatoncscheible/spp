@@ -14,8 +14,6 @@
 
 #include "statistics.h"
 #include "task.h"
-#include "video_capture.h"
-#include "video_processing.h"
 
 class Diagnostics {
    public:

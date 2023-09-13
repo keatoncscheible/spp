@@ -14,15 +14,13 @@
 #include <iostream>
 #include <thread>
 
-#include "diagnostics.h"
-#include "video_capture.h"
-#include "video_processing.h"
+#include "logger.h"
 
 Task::Task(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
            TaskFunction function)
     : id_(id),
       priority_(priority),
-      period_ms(static_cast<int>(period_ms)),
+      period_ms_(period_ms),
       function_(function),
       data_(nullptr) {}
 
@@ -32,8 +30,7 @@ void Task::Start() {
     sch_params.sched_priority = static_cast<int>(priority_);
     if (pthread_setschedparam(thread_.native_handle(), SCHED_FIFO,
                               &sch_params) != 0) {
-        std::cerr << "Failed to set thread priority: " << strerror(errno)
-                  << std::endl;
+        spdlog::error("Failed to set thread priority: {}", strerror(errno));
     }
 }
 

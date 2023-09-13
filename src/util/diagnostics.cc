@@ -17,6 +17,7 @@
 #include <mutex>
 
 #include "error_handling.h"
+#include "logger.h"
 #include "video_capture.h"
 #include "video_processing.h"
 
@@ -38,7 +39,7 @@ Diagnostics::Diagnostics(VideoCapture& video_capture,
 Diagnostics::~Diagnostics() {
     CloseDiagnosticsFile();
     RemoveDiagnosticsFolder();
-    std::cout << "Shutting down diagnostics\n";
+    spdlog::info("Shutting down diagnostics")
 }
 
 void Diagnostics::CreateDiagnosticsFolder() {
@@ -107,7 +108,7 @@ void Diagnostics::DiagnosticsFunction(Task* task) {
 
     while (!shutting_down) {
         std::unique_lock<std::mutex> lock(self->mutex);
-        self->cond.wait_for(lock, task->period_ms);
+        self->cond.wait_for(lock, task->period_ms_);
         self->UpdateDiagnosticsLog();
     }
 }
