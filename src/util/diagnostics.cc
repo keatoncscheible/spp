@@ -18,19 +18,22 @@
 
 #include "error_handling.h"
 #include "logger.h"
-#include "video_capture.h"
-#include "video_processing.h"
-
-extern std::atomic<bool> shutting_down;
+#include "video_input.h"
+#include "video_output.h"
+#include "video_processor.h"
 
 namespace fs = std::filesystem;
 
-Diagnostics::Diagnostics(VideoCapture& video_capture,
-                         VideoProcessing& video_processing)
-    : video_capture_(video_capture),
-      video_processing_(video_processing),
-      task_(TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS,
-            TaskUpdatePeriodMs::DIAGNOSTICS, DiagnosticsFunction) {
+Diagnostics::Diagnostics(TaskId id, TaskPriority priority,
+                         TaskUpdatePeriodMs period_ms, VideoInput& video_input,
+                         VideoProcessor& video_processor,
+                         VideoOutput& video_output,
+                         std::atomic<bool>& shutting_down)
+    : task_(id, priority, period_ms, TaskFcn),
+      video_input_(video_input),
+      video_processor_(video_processor),
+      video_output_(video_output),
+      shutting_down_(shutting_down) {
     task_.SetData(this);
     CreateDiagnosticsFolder();
     OpenDiagnosticsFile();
@@ -39,7 +42,7 @@ Diagnostics::Diagnostics(VideoCapture& video_capture,
 Diagnostics::~Diagnostics() {
     CloseDiagnosticsFile();
     RemoveDiagnosticsFolder();
-    spdlog::info("Shutting down diagnostics")
+    spdlog::info("Shutting down diagnostics");
 }
 
 void Diagnostics::CreateDiagnosticsFolder() {
@@ -99,14 +102,13 @@ void Diagnostics::UpdateDiagnosticsLog() {
 }
 
 void Diagnostics::UpdateStatistics() {
-    video_processing_time_stats_ =
-        video_processing_.time_stats_.GetStatistics();
+    video_processing_time_stats_ = video_processor_.time_stats_.GetStatistics();
 }
 
-void Diagnostics::DiagnosticsFunction(Task* task) {
+void Diagnostics::TaskFcn(Task* task) {
     Diagnostics* self = static_cast<Diagnostics*>(task->GetData());
 
-    while (!shutting_down) {
+    while (!self->shutting_down_) {
         std::unique_lock<std::mutex> lock(self->mutex);
         self->cond.wait_for(lock, task->period_ms_);
         self->UpdateDiagnosticsLog();

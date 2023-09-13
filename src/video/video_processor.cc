@@ -45,7 +45,14 @@ void VideoProcessor::GetInputFrame(cv::Mat& frame) {
 }
 
 void VideoProcessor::ProcessFrame(cv::Mat& frame) {
+    auto start_time = std::chrono::high_resolution_clock::now();
     transformer_->Transform(frame);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto elapsed_time_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                               end_time - start_time)
+                               .count();
+    auto elapsed_time = static_cast<double>(elapsed_time_ns) * 1.0e-9;
+    time_stats_.Push(elapsed_time);
 }
 
 void VideoProcessor::TaskFcn(Task* task) {

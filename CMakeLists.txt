@@ -42,7 +42,7 @@ set(TASK_SOURCES
 )
 
 set(UTIL_SOURCES
-    # ${UTIL_SOURCE_DIR}/diagnostics.cc
+    ${UTIL_SOURCE_DIR}/diagnostics.cc
     ${UTIL_SOURCE_DIR}/logger.cc
 )
 

@@ -11,6 +11,7 @@
 #include <mutex>
 #include <string>
 
+#include "diagnostics.h"
 #include "task.h"
 #include "video_consumer.h"
 #include "video_input.h"
@@ -56,6 +57,7 @@ class App {
     VideoInput video_input_;
     VideoProcessor video_processor_;
     VideoOutput video_output_;
+    Diagnostics diagnostics_;
 };
 
 #endif  // APP_H

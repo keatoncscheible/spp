@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "opencv2/core.hpp"
+#include "statistics.h"
 #include "task.h"
 #include "video_task.h"
 #include "video_transformer.h"
@@ -24,6 +25,7 @@ class VideoProcessor : public VideoTask {
     void Stop();
     void ChangeTransformer(
         std::shared_ptr<VideoTransformerFactory> new_transformer_factory);
+    StatisticsQueue<double> time_stats_{100};
 
    private:
     static void TaskFcn(Task* task);

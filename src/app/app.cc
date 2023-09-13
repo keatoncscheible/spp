@@ -46,7 +46,10 @@ App::App(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
                        shutting_down),
       video_output_(video_processor_, video_player_factory_,
                     TaskId::VIDEO_OUTPUT, TaskPriority::VIDEO_OUTPUT,
-                    TaskUpdatePeriodMs(33), shutting_down) {
+                    TaskUpdatePeriodMs(33), shutting_down),
+      diagnostics_(TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS,
+                   TaskUpdatePeriodMs(1000), video_input_, video_processor_,
+                   video_output_, shutting_down) {
     task_.SetData(this);
 }
 
@@ -57,9 +60,11 @@ void App::Init() {
     video_input_.Init();
     video_processor_.Init();
     video_output_.Init();
+    diagnostics_.Init();
 }
 
 void App::Shutdown() {
+    diagnostics_.Shutdown();
     video_output_.Shutdown();
     video_processor_.Shutdown();
     video_input_.Shutdown();
