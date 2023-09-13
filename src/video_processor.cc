@@ -46,9 +46,10 @@ void VideoProcessor::TaskFcn(Task* task) {
     VideoProcessor* self = static_cast<VideoProcessor*>(task->GetData());
 
     while (!self->shutting_down_) {
-        self->GetInputFrame(self->next_buffer_);
-        self->ProcessFrame(self->next_buffer_);
-        if (!self->next_buffer_.empty()) {
+        cv::Mat& frame = self->next_buffer_;
+        self->GetInputFrame(frame);
+        self->ProcessFrame(frame);
+        if (!frame.empty()) {
             self->SwapBuffers();
             self->NotifyListeners();
         } else {

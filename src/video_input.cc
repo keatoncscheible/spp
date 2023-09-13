@@ -53,12 +53,13 @@ void VideoInput::TaskFcn(Task* task) {
     VideoInput* self = static_cast<VideoInput*>(task->GetData());
 
     while (!self->shutting_down_) {
-        self->GetInputFrame(self->next_buffer_);
-        if (!self->next_buffer_.empty()) {
+        cv::Mat& frame = self->next_buffer_;
+        self->GetInputFrame(frame);
+        if (!frame.empty()) {
             self->SwapBuffers();
             self->NotifyListeners();
         } else {
-            std::cerr << "Input read an empty frame." << std::endl;
+            std::cerr << "input frame is empty" << std::endl;
         }
 
         self->Throttle();
