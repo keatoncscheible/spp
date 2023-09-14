@@ -25,6 +25,9 @@ set(INCLUDE_DIRS
     ${TASK_INCLUDE_DIR}
     ${UTIL_INCLUDE_DIR}
     ${VIDEO_INCLUDE_DIR}
+    ${VIDEO_INCLUDE_DIR}/input
+    ${VIDEO_INCLUDE_DIR}/processing
+    ${VIDEO_INCLUDE_DIR}/output
 )
 
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
@@ -47,16 +50,19 @@ set(UTIL_SOURCES
 )
 
 set(VIDEO_SOURCES
-    ${VIDEO_SOURCE_DIR}/bypass_transformer.cc
-    ${VIDEO_SOURCE_DIR}/grayscale_transformer.cc
-    ${VIDEO_SOURCE_DIR}/hsv_transformer.cc
-    ${VIDEO_SOURCE_DIR}/video_file.cc
-    ${VIDEO_SOURCE_DIR}/video_input.cc
-    ${VIDEO_SOURCE_DIR}/video_output.cc
-    ${VIDEO_SOURCE_DIR}/video_player.cc
-    ${VIDEO_SOURCE_DIR}/video_processor.cc        
     ${VIDEO_SOURCE_DIR}/video_task.cc
-    ${VIDEO_SOURCE_DIR}/webcam.cc
+    # Inputs
+    ${VIDEO_SOURCE_DIR}/input/video_file.cc
+    ${VIDEO_SOURCE_DIR}/input/video_input.cc
+    ${VIDEO_SOURCE_DIR}/input/webcam.cc
+    # Processing
+    ${VIDEO_SOURCE_DIR}/processing/bypass_transformer.cc
+    ${VIDEO_SOURCE_DIR}/processing/grayscale_transformer.cc
+    ${VIDEO_SOURCE_DIR}/processing/hsv_transformer.cc
+    ${VIDEO_SOURCE_DIR}/processing/video_processor.cc  
+    # Outputs
+    ${VIDEO_SOURCE_DIR}/output/video_output.cc
+    ${VIDEO_SOURCE_DIR}/output/video_player.cc
 )
 
 set(SOURCES
