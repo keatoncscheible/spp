@@ -48,7 +48,7 @@ class StatisticsQueue {
     }
 
     Statistics<T> GetStatistics() {
-        Statistics<T> statistics;  // Added type specifier <T> for Statistics
+        Statistics<T> statistics{0, 0, 0, 0, 0};
 
         std::lock_guard<std::mutex> lock(mutex_);
         if (queue_.empty()) {
