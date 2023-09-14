@@ -6,6 +6,7 @@
 #ifndef COLOR_SPACE_TRANSFORMER_H
 #define COLOR_SPACE_TRANSFORMER_H
 
+#include "logger.h"
 #include "opencv2/imgproc.hpp"
 #include "video_transformer.h"
 
@@ -42,7 +43,8 @@ class ColorspaceTransformerFactory : public VideoTransformerFactory {
         } else if (colorspace_ == Colorspace::BGR2HSV) {
             return std::make_shared<BGR2HSVTransformer>();
         } else {
-            return std::make_shared<BypassTransformer>();
+            spdlog::error("Invalid Colorspace Type");
+            return nullptr;
         }
     }
     void SetColorspace(Colorspace colorspace) { colorspace_ = colorspace; }
