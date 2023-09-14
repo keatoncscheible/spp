@@ -34,16 +34,19 @@ class App {
 
    private:
     static void TaskFcn(Task* task);
-    void GetInput(std::string& input);
-    void ProcessInput(std::string& input);
+    void GetTokenizedInput(std::vector<std::string>& tokens);
+    void ParseTokens(std::vector<std::string>& tokens);
+    void ParseInputTokens(std::vector<std::string>& tokens);
+    void ParseProcessingTokens(std::vector<std::string>& tokens);
     void Throttle();
     void Help();
+    void Help(const std::string help_type);
     void Start();
     void Pause();
     void Stop();
     void PrintStats();
     void SetSourceWebcam();
-    void SetSourceVideoFile();
+    void SetSourceVideoFile(const std::string filename);
     void SetTransformerColorspace(Colorspace colorspace);
     void SetTrasformerHaarCascadeClassifier(HaarCascadeClassifierType type);
     void Quit();
