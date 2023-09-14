@@ -100,7 +100,8 @@ void App::ProcessInput(std::string& input) {
     } else if (input == "transform hsv") {
         SetTransformerColorspace(Colorspace::BGR2HSV);
     } else if (input == "transform face") {
-        SetTrasformerHaarCascadeClassifier();
+        SetTrasformerHaarCascadeClassifier(
+            HaarCascadeClassifierType::FrontalFace);
     } else {
         spdlog::warn(
             "{} is an invalid command. Type 'help' to see a list of valid "
@@ -191,11 +192,9 @@ void App::SetTransformerColorspace(Colorspace colorspace) {
         std::make_shared<ColorspaceTransformerFactory>(colorspace));
 }
 
-void App::SetTrasformerHaarCascadeClassifier() {
+void App::SetTrasformerHaarCascadeClassifier(HaarCascadeClassifierType type) {
     video_processor_.ChangeTransformer(
-        std::make_shared<HaarCascadeClassifierFactory>(
-            "/usr/local/src/opencv/src/data/haarcascades/"
-            "haarcascade_frontalface_default.xml"));
+        std::make_shared<HaarCascadeClassifierFactory>(type));
 }
 
 void App::Quit() {

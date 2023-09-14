@@ -13,6 +13,7 @@
 
 #include "colorspace_transformer.h"
 #include "diagnostics.h"
+#include "haar_cascade_classifier.h"
 #include "task.h"
 #include "video_consumer.h"
 #include "video_input.h"
@@ -44,7 +45,7 @@ class App {
     void SetSourceWebcam();
     void SetSourceVideoFile();
     void SetTransformerColorspace(Colorspace colorspace);
-    void SetTrasformerHaarCascadeClassifier();
+    void SetTrasformerHaarCascadeClassifier(HaarCascadeClassifierType type);
     void Quit();
     Task task_;
     std::atomic<bool>& shutting_down_;
