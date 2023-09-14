@@ -11,6 +11,7 @@
 #include <mutex>
 #include <string>
 
+#include "colorspace_transformer.h"
 #include "diagnostics.h"
 #include "task.h"
 #include "video_consumer.h"
@@ -42,21 +43,12 @@ class App {
     void PrintStats();
     void SetSourceWebcam();
     void SetSourceVideoFile();
-    void SetTransformerBypass();
-    void SetTransformerGray();
-    void SetTransformerHsv();
+    void SetTransformerColorspace(Colorspace colorspace);
     void SetTrasformerObjectDetector();
     void Quit();
     Task task_;
     std::atomic<bool>& shutting_down_;
     std::condition_variable& shutdown_cv_;
-    std::shared_ptr<VideoSourceFactory> webcam_factory_;
-    std::shared_ptr<VideoSourceFactory> video_file_factory_;
-    std::shared_ptr<VideoTransformerFactory> bypass_transformer_factory_;
-    std::shared_ptr<VideoTransformerFactory> grayscale_transformer_factory_;
-    std::shared_ptr<VideoTransformerFactory> hsv_transformer_factory_;
-    std::shared_ptr<VideoTransformerFactory> object_detector_factory_;
-    std::shared_ptr<VideoConsumerFactory> video_player_factory_;
     VideoInput video_input_;
     VideoProcessor video_processor_;
     VideoOutput video_output_;

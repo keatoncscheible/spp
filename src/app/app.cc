@@ -12,9 +12,7 @@
 #include <mutex>
 #include <string>
 
-#include "bypass_transformer.h"
-#include "grayscale_transformer.h"
-#include "hsv_transformer.h"
+#include "colorspace_transformer.h"
 #include "logger.h"
 #include "object_detector.h"
 #include "task.h"
@@ -30,25 +28,15 @@ App::App(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
     : task_(id, priority, period_ms, TaskFcn),
       shutting_down_(shutting_down),
       shutdown_cv_(shutdown_cv),
-      webcam_factory_(std::make_shared<WebcamFactory>()),
-      video_file_factory_(std::make_shared<VideoFileFactory>(
-          "~/projects/spp/assets/videos/test.mp4")),
-      bypass_transformer_factory_(std::make_shared<BypassTransformerFactory>()),
-      grayscale_transformer_factory_(
-          std::make_shared<GrayscaleTransformerFactory>()),
-      hsv_transformer_factory_(std::make_shared<HsvTransformerFactory>()),
-      object_detector_factory_(std::make_shared<ObjectDetectorFactory>(
-          "/usr/local/src/opencv/src/data/haarcascades/"
-          "haarcascade_frontalface_default.xml")),
-      video_player_factory_(
-          std::make_shared<VideoPlayerFactory>("Video Player")),
-      video_input_(webcam_factory_, TaskId::VIDEO_INPUT,
+      video_input_(std::make_shared<WebcamFactory>(), TaskId::VIDEO_INPUT,
                    TaskPriority::VIDEO_INPUT, TaskUpdatePeriodMs(33),
                    shutting_down),
-      video_processor_(video_input_, bypass_transformer_factory_,
+      video_processor_(video_input_,
+                       std::make_shared<ColorspaceTransformerFactory>(),
                        TaskId::VIDEO_PROCESSING, TaskPriority::VIDEO_PROCESSING,
                        shutting_down),
-      video_output_(video_processor_, video_player_factory_,
+      video_output_(video_processor_,
+                    std::make_shared<VideoPlayerFactory>("Video Player"),
                     TaskId::VIDEO_OUTPUT, TaskPriority::VIDEO_OUTPUT,
                     TaskUpdatePeriodMs(33), shutting_down),
       diagnostics_(TaskId::DIAGNOSTICS, TaskPriority::DIAGNOSTICS,
@@ -107,11 +95,11 @@ void App::ProcessInput(std::string& input) {
     } else if (input == "stats") {
         PrintStats();
     } else if (input == "transform bypass") {
-        SetTransformerBypass();
+        SetTransformerColorspace(Colorspace::BYPASS);
     } else if (input == "transform gray") {
-        SetTransformerGray();
+        SetTransformerColorspace(Colorspace::BGR2GRAY);
     } else if (input == "transform hsv") {
-        SetTransformerHsv();
+        SetTransformerColorspace(Colorspace::BGR2HSV);
     } else if (input == "transform face") {
         SetTrasformerObjectDetector();
     } else {
@@ -189,26 +177,24 @@ void App::PrintStats() {
     file.close();
 }
 
-void App::SetSourceWebcam() { video_input_.ChangeSource(webcam_factory_); }
+void App::SetSourceWebcam() {
+    video_input_.ChangeSource(std::make_shared<WebcamFactory>());
+}
 
 void App::SetSourceVideoFile() {
-    video_input_.ChangeSource(video_file_factory_);
+    video_input_.ChangeSource(std::make_shared<VideoFileFactory>(
+        "~/projects/spp/assets/videos/test.mp4"));
 }
 
-void App::SetTransformerBypass() {
-    video_processor_.ChangeTransformer(bypass_transformer_factory_);
-}
-
-void App::SetTransformerGray() {
-    video_processor_.ChangeTransformer(grayscale_transformer_factory_);
-}
-
-void App::SetTransformerHsv() {
-    video_processor_.ChangeTransformer(hsv_transformer_factory_);
+void App::SetTransformerColorspace(Colorspace colorspace) {
+    video_processor_.ChangeTransformer(
+        std::make_shared<ColorspaceTransformerFactory>(colorspace));
 }
 
 void App::SetTrasformerObjectDetector() {
-    video_processor_.ChangeTransformer(object_detector_factory_);
+    video_processor_.ChangeTransformer(std::make_shared<ObjectDetectorFactory>(
+        "/usr/local/src/opencv/src/data/haarcascades/"
+        "haarcascade_frontalface_default.xml"));
 }
 
 void App::Quit() {

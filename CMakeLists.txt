@@ -56,9 +56,7 @@ set(VIDEO_SOURCES
     ${VIDEO_SOURCE_DIR}/input/video_input.cc
     ${VIDEO_SOURCE_DIR}/input/webcam.cc
     # Processing
-    ${VIDEO_SOURCE_DIR}/processing/bypass_transformer.cc
-    ${VIDEO_SOURCE_DIR}/processing/grayscale_transformer.cc
-    ${VIDEO_SOURCE_DIR}/processing/hsv_transformer.cc
+    ${VIDEO_SOURCE_DIR}/processing/colorspace_transformer.cc
     ${VIDEO_SOURCE_DIR}/processing/object_detector.cc  
     ${VIDEO_SOURCE_DIR}/processing/video_processor.cc  
     # Outputs
