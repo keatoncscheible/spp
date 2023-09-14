@@ -44,7 +44,7 @@ class App {
     void SetSourceWebcam();
     void SetSourceVideoFile();
     void SetTransformerColorspace(Colorspace colorspace);
-    void SetTrasformerObjectDetector();
+    void SetTrasformerHaarCascadeClassifier();
     void Quit();
     Task task_;
     std::atomic<bool>& shutting_down_;

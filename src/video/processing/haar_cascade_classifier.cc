@@ -3,7 +3,7 @@
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
-#include "object_detector.h"
+#include "haar_cascade_classifier.h"
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
@@ -11,9 +11,9 @@
 
 #include "logger.h"
 
-void ObjectDetector::Transform(cv::Mat& frame) {
+void HaarCascadeClassifier::Transform(cv::Mat& frame) {
     if (frame.empty()) {
-        spdlog::debug("ObjectDetector: empty frame");
+        spdlog::debug("HaarCascadeClassifier: empty frame");
     }
 
     // Load the Haar cascade for face detection

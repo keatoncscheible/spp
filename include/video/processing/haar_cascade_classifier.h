@@ -1,17 +1,17 @@
 /******************************************************************************
- * haar_cascades_filename:    object_detector.h
+ * haar_cascades_filename:    haar_cascade_classifier.h
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
-#ifndef OBJECT_DETECTOR_H
-#define OBJECT_DETECTOR_H
+#ifndef HAAR_CASCADE_CLASSIFIER_H
+#define HAAR_CASCADE_CLASSIFIER_H
 
 #include "opencv2/imgproc.hpp"
 #include "video_transformer.h"
 
-class ObjectDetector : public VideoTransformer {
+class HaarCascadeClassifier : public VideoTransformer {
    public:
-    ObjectDetector(const std::string& haar_cascades_filename)
+    HaarCascadeClassifier(const std::string& haar_cascades_filename)
         : haar_cascades_filename_(haar_cascades_filename){};
     void Transform(cv::Mat& frame) override;
 
@@ -19,16 +19,16 @@ class ObjectDetector : public VideoTransformer {
     std::string haar_cascades_filename_;
 };
 
-class ObjectDetectorFactory : public VideoTransformerFactory {
+class HaarCascadeClassifierFactory : public VideoTransformerFactory {
    public:
-    ObjectDetectorFactory(const std::string& haar_cascades_filename)
+    HaarCascadeClassifierFactory(const std::string& haar_cascades_filename)
         : haar_cascades_filename_(haar_cascades_filename) {}
     std::shared_ptr<VideoTransformer> Create() override {
-        return std::make_shared<ObjectDetector>(haar_cascades_filename_);
+        return std::make_shared<HaarCascadeClassifier>(haar_cascades_filename_);
     }
 
    private:
     std::string haar_cascades_filename_;
 };
 
-#endif  // OBJECT_DETECTOR_H
+#endif  // HAAR_CASCADE_CLASSIFIER_H

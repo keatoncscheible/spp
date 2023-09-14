@@ -56,7 +56,7 @@ set(VIDEO_SOURCES
     ${VIDEO_SOURCE_DIR}/input/video_source.cc
     # Processing
     ${VIDEO_SOURCE_DIR}/processing/colorspace_transformer.cc
-    ${VIDEO_SOURCE_DIR}/processing/object_detector.cc  
+    ${VIDEO_SOURCE_DIR}/processing/haar_cascade_classifier.cc  
     ${VIDEO_SOURCE_DIR}/processing/video_processor.cc  
     # Outputs
     ${VIDEO_SOURCE_DIR}/output/video_output.cc

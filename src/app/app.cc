@@ -13,8 +13,8 @@
 #include <string>
 
 #include "colorspace_transformer.h"
+#include "haar_cascade_classifier.h"
 #include "logger.h"
-#include "object_detector.h"
 #include "task.h"
 #include "video_consumer.h"
 #include "video_player.h"
@@ -100,7 +100,7 @@ void App::ProcessInput(std::string& input) {
     } else if (input == "transform hsv") {
         SetTransformerColorspace(Colorspace::BGR2HSV);
     } else if (input == "transform face") {
-        SetTrasformerObjectDetector();
+        SetTrasformerHaarCascadeClassifier();
     } else {
         spdlog::warn(
             "{} is an invalid command. Type 'help' to see a list of valid "
@@ -191,10 +191,11 @@ void App::SetTransformerColorspace(Colorspace colorspace) {
         std::make_shared<ColorspaceTransformerFactory>(colorspace));
 }
 
-void App::SetTrasformerObjectDetector() {
-    video_processor_.ChangeTransformer(std::make_shared<ObjectDetectorFactory>(
-        "/usr/local/src/opencv/src/data/haarcascades/"
-        "haarcascade_frontalface_default.xml"));
+void App::SetTrasformerHaarCascadeClassifier() {
+    video_processor_.ChangeTransformer(
+        std::make_shared<HaarCascadeClassifierFactory>(
+            "/usr/local/src/opencv/src/data/haarcascades/"
+            "haarcascade_frontalface_default.xml"));
 }
 
 void App::Quit() {
