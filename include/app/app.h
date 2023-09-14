@@ -45,6 +45,7 @@ class App {
     void SetTransformerBypass();
     void SetTransformerGray();
     void SetTransformerHsv();
+    void SetTrasformerObjectDetector();
     void Quit();
     Task task_;
     std::atomic<bool>& shutting_down_;
@@ -54,6 +55,7 @@ class App {
     std::shared_ptr<VideoTransformerFactory> bypass_transformer_factory_;
     std::shared_ptr<VideoTransformerFactory> grayscale_transformer_factory_;
     std::shared_ptr<VideoTransformerFactory> hsv_transformer_factory_;
+    std::shared_ptr<VideoTransformerFactory> object_detector_factory_;
     std::shared_ptr<VideoConsumerFactory> video_player_factory_;
     VideoInput video_input_;
     VideoProcessor video_processor_;

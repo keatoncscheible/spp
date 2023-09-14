@@ -16,6 +16,7 @@
 #include "grayscale_transformer.h"
 #include "hsv_transformer.h"
 #include "logger.h"
+#include "object_detector.h"
 #include "task.h"
 #include "video_consumer.h"
 #include "video_file.h"
@@ -36,6 +37,9 @@ App::App(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
       grayscale_transformer_factory_(
           std::make_shared<GrayscaleTransformerFactory>()),
       hsv_transformer_factory_(std::make_shared<HsvTransformerFactory>()),
+      object_detector_factory_(std::make_shared<ObjectDetectorFactory>(
+          "/usr/local/src/opencv/src/data/haarcascades/"
+          "haarcascade_frontalface_default.xml")),
       video_player_factory_(
           std::make_shared<VideoPlayerFactory>("Video Player")),
       video_input_(webcam_factory_, TaskId::VIDEO_INPUT,
@@ -108,6 +112,8 @@ void App::ProcessInput(std::string& input) {
         SetTransformerGray();
     } else if (input == "transform hsv") {
         SetTransformerHsv();
+    } else if (input == "transform face") {
+        SetTrasformerObjectDetector();
     } else {
         spdlog::warn(
             "{} is an invalid command. Type 'help' to see a list of valid "
@@ -140,6 +146,8 @@ void App::Help() {
     spdlog::info(
         "  ('transform gray')      : Set video transformer to grayscale");
     spdlog::info("  ('transform hsv')       : Set video transformer to hsv");
+    spdlog::info(
+        "  ('transform face')      : Set video transformer to face detection");
 }
 
 void App::Start() {
@@ -197,6 +205,10 @@ void App::SetTransformerGray() {
 
 void App::SetTransformerHsv() {
     video_processor_.ChangeTransformer(hsv_transformer_factory_);
+}
+
+void App::SetTrasformerObjectDetector() {
+    video_processor_.ChangeTransformer(object_detector_factory_);
 }
 
 void App::Quit() {

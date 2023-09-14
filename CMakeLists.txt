@@ -59,6 +59,7 @@ set(VIDEO_SOURCES
     ${VIDEO_SOURCE_DIR}/processing/bypass_transformer.cc
     ${VIDEO_SOURCE_DIR}/processing/grayscale_transformer.cc
     ${VIDEO_SOURCE_DIR}/processing/hsv_transformer.cc
+    ${VIDEO_SOURCE_DIR}/processing/object_detector.cc  
     ${VIDEO_SOURCE_DIR}/processing/video_processor.cc  
     # Outputs
     ${VIDEO_SOURCE_DIR}/output/video_output.cc
