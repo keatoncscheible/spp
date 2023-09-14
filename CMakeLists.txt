@@ -52,9 +52,8 @@ set(UTIL_SOURCES
 set(VIDEO_SOURCES
     ${VIDEO_SOURCE_DIR}/video_task.cc
     # Inputs
-    ${VIDEO_SOURCE_DIR}/input/video_file.cc
     ${VIDEO_SOURCE_DIR}/input/video_input.cc
-    ${VIDEO_SOURCE_DIR}/input/webcam.cc
+    ${VIDEO_SOURCE_DIR}/input/video_source.cc
     # Processing
     ${VIDEO_SOURCE_DIR}/processing/colorspace_transformer.cc
     ${VIDEO_SOURCE_DIR}/processing/object_detector.cc  

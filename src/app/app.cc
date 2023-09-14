@@ -17,20 +17,19 @@
 #include "object_detector.h"
 #include "task.h"
 #include "video_consumer.h"
-#include "video_file.h"
 #include "video_player.h"
 #include "video_source.h"
 #include "video_transformer.h"
-#include "webcam.h"
 
 App::App(TaskId id, TaskPriority priority, TaskUpdatePeriodMs period_ms,
          std::atomic<bool>& shutting_down, std::condition_variable& shutdown_cv)
     : task_(id, priority, period_ms, TaskFcn),
       shutting_down_(shutting_down),
       shutdown_cv_(shutdown_cv),
-      video_input_(std::make_shared<WebcamFactory>(), TaskId::VIDEO_INPUT,
-                   TaskPriority::VIDEO_INPUT, TaskUpdatePeriodMs(33),
-                   shutting_down),
+      video_input_(
+          std::make_shared<VideoSourceFactory>(VideoSourceType::WEBCAM),
+          TaskId::VIDEO_INPUT, TaskPriority::VIDEO_INPUT,
+          TaskUpdatePeriodMs(33), shutting_down),
       video_processor_(video_input_,
                        std::make_shared<ColorspaceTransformerFactory>(),
                        TaskId::VIDEO_PROCESSING, TaskPriority::VIDEO_PROCESSING,
@@ -128,7 +127,7 @@ void App::Help() {
     spdlog::info(
         "  ('stats')               : Print out statistics for the sensory "
         "processing pipeline");
-    // spdlog::info("  ('source webcam')       : Set video source to webcame");
+    // spdlog::info("  ('source webcam')       : Set video source to webcam");
     // spdlog::info("  ('source file')         : Set video source to file");
     spdlog::info("  ('transform bypass')    : Bypass the video transformer");
     spdlog::info(
@@ -178,12 +177,13 @@ void App::PrintStats() {
 }
 
 void App::SetSourceWebcam() {
-    video_input_.ChangeSource(std::make_shared<WebcamFactory>());
+    video_input_.ChangeSource(
+        std::make_shared<VideoSourceFactory>(VideoSourceType::WEBCAM));
 }
 
 void App::SetSourceVideoFile() {
-    video_input_.ChangeSource(std::make_shared<VideoFileFactory>(
-        "~/projects/spp/assets/videos/test.mp4"));
+    video_input_.ChangeSource(std::make_shared<VideoSourceFactory>(
+        VideoSourceType::FILE, "~/projects/spp/assets/videos/test.mp4"));
 }
 
 void App::SetTransformerColorspace(Colorspace colorspace) {

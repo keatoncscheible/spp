@@ -1,11 +1,11 @@
 /******************************************************************************
- * Filename:    video_file.cc
+ * Filename:    video_source.cc
  * Copyright (c) 2023 Keaton Scheible
  *****************************************************************************/
 
-#include "video_file.h"
+#include "video_source.h"
 
-#include <spdlog/spdlog.h>
+#include <logger.h>
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -33,3 +33,28 @@ void VideoFile::ReadFrame(cv::Mat& frame) {
         // Handle the error (e.g., return a flag to indicate end of video)
     }
 }
+
+void Webcam::Open() {
+    spdlog::debug("Opening webcam");
+    if (capture_.isOpened()) {
+        spdlog::warn("Webcam already opened");
+        return;
+    }
+    capture_.open(0);
+    if (!capture_.isOpened()) {
+        spdlog::error("Problem opening webcam");
+    }
+}
+
+void Webcam::Close() {
+    spdlog::debug("Closing webcam");
+    try {
+        if (capture_.isOpened()) {
+            capture_.release();
+        }
+    } catch (const std::exception& e) {
+        spdlog::error("Error stopping video capture: {}", e.what());
+    }
+}
+
+void Webcam::ReadFrame(cv::Mat& frame) { capture_.read(frame); }
