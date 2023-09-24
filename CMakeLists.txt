@@ -4,14 +4,10 @@ project(spp)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_COMPILER /usr/bin/g++)
 
-# Set the path to OpenCVConfig.cmake
-set(OpenCV_DIR "/usr/local/src/opencv/build")
 find_package(OpenCV REQUIRED)
 message(STATUS "Found OpenCV version: ${OpenCV_VERSION}")
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-# Find the spdlog package (you can customize this if needed)
-set(spdlog_DIR "/usr/local/src/spdlog/build")  # Replace with the actual path to your spdlog cmake directory
 find_package(spdlog REQUIRED)
 
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")

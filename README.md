@@ -2,7 +2,7 @@
 
 ***This project is actively being developed***
 
-Sensory Processing Pipeline (SPP) is a multithreaded application designed to process various types of sensory data. It currently supports video processing via OpenCV, but the goal is to eventually expand SPP's capabilities to handle a wider range of sensory data, including audio.
+Sensory Processing Pipeline (SPP) is a multithreaded application designed to process various types of sensory data. It currently supports video processing via OpenCV, but the goal is to eventually expand SPP's capabilities to handle a wider range of sensory data, including   audio.
 
 
 ## Features
@@ -25,15 +25,14 @@ Sensory Processing Pipeline (SPP) is a multithreaded application designed to pro
 
 1. Clone the repository:<br>
 `git clone https://github.com/keatoncscheible/spp.git`
-1. Update OpenCV and spdlog paths in CMakeLists.txt<br>
-`set(OpenCV_DIR "/path/to/your/opencv/build")`<br>
-`set(spdlog_DIR "/path/to/your/spdlog/build")`
+
 1. Build SPP. Go to to root of the SPP repo and enter the following commands:<br>
 `mkdir build`<br>
 `cd build`<br>
 `cmake ..`<br>
 `sudo make`<br>
 `cd ..`<br>
+
 1. Run the application. Go to to root of the SPP repo and enter the following command:<br>
 `sudo ./build/spp_app`
 
